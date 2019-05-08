@@ -1,0 +1,30 @@
+{%extends 'base.html'%}
+{%block content%}
+{%include 'nav.html'%}
+<h1>PRODUCT</h1>
+<div class="album py-5 bg-light">
+  <div class="container" align="text-center">
+    <div class="row">
+
+      {% for pro in product.all%}
+
+      <div class="col-md-4">
+      <p class="card-text" align="text-center"><a href="{%url 'detailview' pro.pk%}">{{pro.title}}</a></p>
+        <div class="card mb-4 shadow-sm">
+          <a href="{%url 'detailview' pro.pk%}"><img class="card-img-top" src="{{pro.image.url}}" height="200" width="300"></a>
+          <div class="card-body">
+            <p class="card-text"><button class="btn btn-primary">{{pro.likes}} Like</button>   Posted On:{{pro.pub_date}}</p>
+
+          </div>
+        </div>  
+      </div>
+      {% endfor %} 
+      
+    </div>
+  </div>
+</div>
+<button class="btn btn-primary">{{pro.likes}}</button>
+
+
+
+{%endblock%}

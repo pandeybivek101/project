@@ -1,0 +1,29 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+{% include 'nav.html'%}
+
+<div class="album py-5 bg-light">
+  <div class="container" align="text-center">
+    <div class="row">
+      <div class="col-md-5">
+        <p><a class="nav-item nav-link active" href="{% url 'home'%}">BACK</a></p> 
+        <p class="card-text" align="text-center">TITLE:<a href="{{product.url}}">{{product.title}}</a></p>
+        <p class="card-text" align="text-center">PUBLISH DATE:{{product.pub_date}}</p>
+        <p class="card-text" align="text-center">UPLOADED BY:{{product.user.username}}</p>
+        <img class="card-img-top" src="{{product.image.url}}" height="500" width="500">
+      </div>
+      <div class="col-md-5">
+        <p class="card-text"><a href="javascript:{document.getElementById('upvote').submit()}"><button class="btn btn-primary">{{product.likes}} Like</button></a></p>
+        <p class="card-text" align="text-center">BODY:{{product.body}}</p> 
+      </div>
+    </div> 
+  </div>
+</div>
+<form id="upvote" method="POST" action="{% url 'upvote' product.id %}">
+  {% csrf_token %}
+  <input type="hidden"/>
+</form>
+
+{% endblock %}
