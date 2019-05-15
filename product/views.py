@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Product
 from django.utils import timezone
 
+
 # Create your views here.
 def HomeView(request):
 	product=Product.objects
@@ -48,6 +49,14 @@ def UpVote(request, product_id):
 		return redirect('/product/'+str(product.id))
 	else:
 		return render(request, 'detailview.html')
+
+def Search(request):
+    query=request.GET.get('q','')
+    if query:
+	    result=Product.objects.filter(title__icontains=query).distinct()
+    else:
+	    result=[]
+    return render(request, 'search.html', {'result':result})
 
 	
 

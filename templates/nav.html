@@ -18,6 +18,10 @@
     {% else %}
     <a class="nav-item nav-link active" href="{% url 'signup'%}">signup</a>
     <a class="nav-item nav-link active" href="{% url 'login'%}">login</a>
+    <form action="{% url 'search' %}" method="GET">
+    <input type="text" name="search">
+    <button class="btn btn-primary">search</button>
+    </form>
     {% endif %}
 
 

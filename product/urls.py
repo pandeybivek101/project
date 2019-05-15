@@ -18,6 +18,7 @@ from . import views
 
 urlpatterns = [
     path('addproduct/', views.AddProduct, name='addproduct'),
+    path('search/', views.Search, name='search'),
     path('<int:product_id>', views.DetailView, name='detailview'),
     path('<int:product_id>/upvote', views.UpVote, name='upvote')
 ]
