@@ -2,24 +2,18 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib import auth
+from .forms import *
 # Create your views here.
+
 def SignUp(request):
     if request.method == 'POST':
-        if request.POST['password'] == request.POST['confirmpassword']:
-            try:
-                user = User.objects.get(username=request.POST['username'])
-                return render(request, 'signup.html', {'error':'Username is already taken'})
-            except User.DoesNotExist:
-                user = User.objects.create_user(username=request.POST['username'], password=request.POST['password'])
-                auth.login(request, user)
-                return redirect('home')
-
-
-        else:
-            return render(request, 'signup.html', {'error':'Password doesn\'t matched'})
-
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
     else:
-        return render(request, 'signup.html')
+        form = UserRegistrationForm()
+    return render(request, 'signup.html', {"form":form})
 
 
 

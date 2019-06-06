@@ -7,7 +7,6 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
-
      {% if user.is_authenticated %}
      <a class="nav-item nav-link active" href="{% url 'addproduct'%}">Add Product</a>
      <a class="nav-item nav-link active" href="javascript:{document.getElementById('logout').submit()}">logout</a>
@@ -15,17 +14,14 @@
       {% csrf_token %}
       <input type="hidden" />
     </form>
+    <form action="{% url 'search' %}" method="GET">
+      <input type="text" name="q" value="">
+      <button class="btn btn-primary">search</button>
+    </form>
     {% else %}
     <a class="nav-item nav-link active" href="{% url 'signup'%}">signup</a>
     <a class="nav-item nav-link active" href="{% url 'login'%}">login</a>
-    <form action="{% url 'search' %}" method="GET">
-    <input type="text" name="search">
-    <button class="btn btn-primary">search</button>
-    </form>
     {% endif %}
-
-
   </div>
-
 </div>
-</nav>    
+</nav>   
