@@ -17,9 +17,15 @@ from django.urls import path,include
 from . import views
 from product.views import *
 
-urlpatterns = [
+urlpatterns =[
     path('addproduct/', AddProductItem.as_view(), name='addproduct'),
+    #path('addproduct/', views.AddProductItem, name='addproduct'),
     path('search/', views.Search, name='search'),
-    path('<int:product_id>', views.DetailView, name='detailview'),
-    path('<int:product_id>/upvote', views.UpVote, name='upvote')
+    path('<int:pk>', views.DetailView, name='detailview'),
+    path('<int:pk>/update-product', UpdateProductview.as_view(), name='update_product'),
+    path('<int:pk>/delete-product', DeleteProductView.as_view(), name='delete_product'),
+    path('user/<str:username>', UserProductlistView.as_view(), name='userproduct'),
+    path('catagory/<str:catagory>', productcatagorylist.as_view(), name='product-catagory'),
+    path('<int:product_id>/upvote', views.UpVote, name='upvote'),
+
 ]

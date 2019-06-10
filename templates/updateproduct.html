@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h1>Update Product</h1>
+<form name="" method="POST" action="{% url 'update_product' object.id %}" enctype="multipart/form-data">
+	{% csrf_token %}
+	{{form.as_p}}
+	<button class="btn btn-primary">Update</button>
+</form>
+{% endblock %}

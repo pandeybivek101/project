@@ -1,15 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
-{%include 'nav.html'%}
-
 <h1>Login</h1>
-{{error}}
-<form name="" method="POST" action="{% url 'login' %}">
-	{% csrf_token %}
-	Username:<br/>
-	<input type="text" name="username"><br/><br/>
-	Password:<br/>
-	<input type="password" name="password"><br/><br/>
-	<input class="btn btn-primary" type="submit" value="login">
-</form>
+  <form class="px-4 py-3" method="POST" action="{% url 'login' %}">
+  {% csrf_token %}
+  <div class="form-group">
+    {{form.as_p}}
+    </div>
+    <button type="submit" class="btn btn-primary">Sign in</button>
+  </form>
+  <div class="dropdown-divider"></div>
+  <a class="dropdown-item" href="{% url 'signup' %}">New around here? Sign up</a>
+  <a class="dropdown-item" href="#">Forgot password?</a>
 {% endblock %}

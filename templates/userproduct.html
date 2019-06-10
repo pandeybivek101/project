@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{%block content%}
+<h1 class="mb-3">Posted By: {{ view.kwargs.username }} ({{ product.paginator.count}})</h1>
+<div class="container" align="text-center">
+  <div class="row">
+    {% for pro in product%}
+    <div class="col-md-4">
+      <p class="card-text" align="text-center"><a href="{%url 'detailview' pro.pk%}"><h2>{{pro.title}}</h2></a>
+      <img class="rounded-circle article-img" src="{{pro.user.profile.image.url}}">
+        {% if pro.user == user %}
+        <a class="mr-2" href="{% url 'userproduct' pro.user.username%}">My post</a>
+        {% else %}
+        <a class="mr-2" href="{% url 'userproduct' pro.user.username%}">{{ pro.user }}</a>
+        {% endif %}
+      </p>
+      <div class="card mb-4 shadow-sm">
+        <a href="{%url 'detailview' pro.pk%}"><img class="card-img-top" src="{{pro.image.url}}" height="200" width="300"></a>
+        <div class="card-body">
+          <div class="card-text"><button class="btn btn-primary"> Like</button> Posted On:{{pro.pub_date|date:"M d, Y"}}</div>  
+          <p class="card-text">Price:{{pro.price}}</p>
+        </div>
+      </div>  
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
