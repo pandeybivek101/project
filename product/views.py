@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect, get_object_or_404
+from django.shortcuts import render,redirect, get_object_or_404, HttpResponseRedirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import Product
@@ -10,7 +10,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.views.generic import *
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 
 
 # Create your views here.
@@ -53,14 +53,26 @@ def DetailView(request, pk):
 	return render(request, 'detailview.html', {'product':product})
 
 
-def UpVote(request, product_id):
+'''def UpVote(request, pk):
 	if request.method=='POST':
-		product = get_object_or_404(Product, pk=product_id)
+		product = get_object_or_404(Product, pk=id)
 		product.likes += 1
 		product.save()
 		return redirect('/product/'+str(product.id))
 	else:
-		return render(request, 'detailview.html')
+		return render(request, 'detailview.html')'''
+
+@login_required
+def UpVote(request,pk):
+	like=get_object_or_404(Product,pk=pk)
+	user=request.user
+	if request.method=='POST':
+		if like.likes.filter(id=user.id).exists():
+			like.likes.remove(user)
+		else:
+			like.likes.add(user)
+		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   
+	return render(request , 'home.html' ,{'like':like})
 
 
 

@@ -17,7 +17,7 @@ class Product(models.Model):
 	catagory = models.ForeignKey(Catagory, on_delete=models.CASCADE)
 	price = models.CharField(max_length=10)
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
-	likes=models.IntegerField(default=0)
+	likes=models.ManyToManyField(User,related_name="likes",blank=True)
 	comment = models.CharField(max_length=500, null=True, blank=True)
 
 	def __str__(self):
@@ -28,4 +28,7 @@ class Product(models.Model):
 
 	def pub_date_pretty(self):
 		return self.pub_date.strftime['%b %e, %Y']
+
+	def total_like(self):
+		return self.likes.count()
 

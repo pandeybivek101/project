@@ -26,6 +26,6 @@ urlpatterns =[
     path('<int:pk>/delete-product', DeleteProductView.as_view(), name='delete_product'),
     path('user/<str:username>', UserProductlistView.as_view(), name='userproduct'),
     path('catagory/<str:catagory>', productcatagorylist.as_view(), name='product-catagory'),
-    path('<int:product_id>/upvote', views.UpVote, name='upvote'),
+    path('<int:pk>/upvote', views.UpVote, name='upvote'),
 
 ]

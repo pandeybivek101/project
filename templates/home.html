@@ -20,7 +20,7 @@
           <form id="upvote1" method="POST" action="{% url 'upvote' pro.id %}">
           {% csrf_token %}
             <input type="hidden"/>
-            <a href="javascript:{document.getElementById('upvote1').submit()}"></a><button class="btn btn-info">{{pro.likes}}Like</button>
+            <button class="btn btn-info">{{pro.total_like}}Like</button>
           </form>
            Posted On:{{pro.pub_date|date:"M d, Y"}}</div>  
           <p class="card-text">Price:{{pro.price}}</p>
