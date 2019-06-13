@@ -7,6 +7,7 @@
     <div class="card-text" align="text-center"><img class="rounded-circle account-img" src="{{user.profile.image.url}}" height="50" width="50" >
       <h2>{{user.username}}</h2></a>
       </div>
+      <p class="card-text"><a href="{% url 'userproduct' user.username %}">My Post</a></p>
       <p class="card-text" align="text-center">{{user.email}}</a>
       </p>
       <form class="px-4 py-3" method="POST" action="{% url 'profile' %}"  enctype="multipart/form-data">

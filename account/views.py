@@ -7,6 +7,8 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from .models import *
+from django.views.generic import *
+from product.models import Product
 
 # Create your views here.
 
@@ -42,4 +44,9 @@ def profile(request):
         user_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=request.user.profile)
     return render(request, 'profile.html', {'user_form': user_form, 'profile_form': profile_form })
+
+
+def UserProfile(request, pk):
+    product = Product.objects.get(pk = pk)
+    return render(request, 'userprofile.html', {"product":product})
 

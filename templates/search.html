@@ -8,9 +8,9 @@
 		<div class="col-md-4">
 			<p class="card-text"><img class="rounded-circle article-img" src="{{pro.user.profile.image.url}}">
 				{% if pro.user == user %}
-				<a class="mr-2" href="{% url 'userproduct' pro.user.username%}">My post</a>
+				<a class="mr-2" href="{% url 'profile' %}">My post</a>
 				{% else %}
-				<a class="mr-2" href="{% url 'userproduct' pro.user.username%}">{{ pro.user }}</a>
+				<a class="mr-2" href="{% url 'userprofile' pro.pk %}">{{ pro.user }}</a>
 				{% endif %}
 				<a href="{%url 'detailview' pro.pk%}"><h2>{{pro.title}}</h2></a>
 			</p>

@@ -27,5 +27,6 @@ urlpatterns =[
     path('user/<str:username>', UserProductlistView.as_view(), name='userproduct'),
     path('catagory/<str:catagory>', productcatagorylist.as_view(), name='product-catagory'),
     path('<int:pk>/upvote', views.UpVote, name='upvote'),
+    
 
 ]
