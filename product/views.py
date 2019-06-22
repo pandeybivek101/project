@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect, get_object_or_404, HttpResponseRedirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Product
+from .models import *
 from django.utils import timezone
 from django.core.paginator import Paginator
 from .forms import *
@@ -22,21 +22,6 @@ def HomeView(request):
 	product=paginator.get_page(page)
 	return render(request, "home.html", {'product':product, 'name':name})
 
-
-"""@login_required
-def AddProductItem(request):
-	if request.method == 'POST':
-		form = AddProductForm(request.POST, request.FILES)
-		if form.is_valid():
-			data = form.save(commit = False)
-			data.user = request.user
-			data.save()
-			messages.success(request, f'Item added successfully')
-			return redirect("home")
-	else:
-		form = AddProductForm()
-	return render(request,'addproduct.html', {"form":form})"""
-
 		
 class AddProductItem(LoginRequiredMixin, CreateView):
 	form_class = AddProductForm
@@ -50,30 +35,31 @@ class AddProductItem(LoginRequiredMixin, CreateView):
 
 def DetailView(request, pk):
 	product=get_object_or_404(Product,pk=pk)
-	return render(request, 'detailview.html', {'product':product})
-
-
-'''def UpVote(request, pk):
-	if request.method=='POST':
-		product = get_object_or_404(Product, pk=id)
-		product.likes += 1
-		product.save()
-		return redirect('/product/'+str(product.id))
+	comment = product.comment_set.all().order_by('-commented_date')
+	if request.method == 'POST':
+		form = CommentForm(request.POST)
+		if form.is_valid():
+			comment = form.save(commit = False)
+			comment.user = request.user
+			comment.product = product
+			comment.save()
+			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 	else:
-		return render(request, 'detailview.html')'''
+		form = CommentForm()
+	return render(request, 'detailview.html', {'product':product, 'comment':comment, 'form':form})
+
 
 @login_required
-def UpVote(request,pk):
-	like=get_object_or_404(Product,pk=pk)
+def LikeProduct(request,pk):
+	product=get_object_or_404(Product,pk=pk)
 	user=request.user
 	if request.method=='POST':
-		if like.likes.filter(id=user.id).exists():
-			like.likes.remove(user)
+		if product.likes.filter(id=user.id).exists():
+			product.likes.remove(user)
 		else:
-			like.likes.add(user)
+			product.likes.add(user)
 		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   
-	return render(request , 'home.html' ,{'like':like})
-
+	return render(request , 'home.html' ,{'product':product})
 
 
 def Search(request):
@@ -140,5 +126,27 @@ class productcatagorylist(UserProductlistView, ListView):
 		return Product.objects.filter(catagory = catagory).order_by('-pub_date')
 
 
+class DeleteComment(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+	model = Comment
+	template_name = 'commentdelete.html'
+	context_object_name = 'comment'
+	success_url = reverse_lazy("home")
+
+	def test_func(self):
+		comment = self.get_object()
+		if comment.user == self.request.user or comment.product.user == self.request.user:
+			return True
+		else:
+			return False
 
 
+@login_required
+def EditComment(request,pk):
+	comment = Comment.objects.get(pk = pk )
+	form=CommentForm(request.POST or None, instance=comment)
+	if request.method == 'POST':
+		if form.is_valid():
+			if comment.user == request.user:
+				form.save()
+				return redirect("home")
+	return render(request, 'commentupdate.html', {'form':form, 'comment':comment})

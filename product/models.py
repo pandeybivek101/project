@@ -18,7 +18,6 @@ class Product(models.Model):
 	price = models.CharField(max_length=10)
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	likes=models.ManyToManyField(User,related_name="likes",blank=True)
-	comment = models.CharField(max_length=500, null=True, blank=True)
 
 	def __str__(self):
 		return self.title
@@ -31,4 +30,12 @@ class Product(models.Model):
 
 	def total_like(self):
 		return self.likes.count()
+
+class Comment(models.Model):
+	comment = models.CharField(max_length=300)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	product = models.ForeignKey(Product, on_delete=models.CASCADE)
+	commented_date = models.DateTimeField(auto_now_add = True)
+
+
 

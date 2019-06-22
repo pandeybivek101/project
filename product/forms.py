@@ -6,3 +6,7 @@ class AddProductForm(forms.ModelForm):
 		model = Product
 		fields = ['title', 'body', 'url', 'image', 'price', 'catagory']
 
+class CommentForm(forms.ModelForm):
+	class Meta:
+		model = Comment
+		fields = ['comment']
