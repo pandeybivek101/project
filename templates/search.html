@@ -23,8 +23,9 @@
 							<input type="hidden"/>
 							<button class="btn btn-info">{{pro.total_like}}Like</button>
 						</form>
-						Posted On:{{pro.pub_date|date:"M d, Y"}}</div>  
-						<p class="card-text">Price:{{pro.price}}</p>
+						<p><a href="{%url 'detailview' pro.pk %}">comment {{countComment}}</a></p>
+						<b>Price:{{pro.price}}</b></div>  
+						<p class="card-text">Posted On:{{pro.pub_date|date:"M d, Y"}}</p>
 					</div>
 				</div>  
 			</div>

@@ -76,7 +76,7 @@ class UpdateProductview(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 	model = Product
 	form_class = AddProductForm
 	template_name = "updateproduct.html"
-	success_url = reverse_lazy('home')
+	success_url = "/product/{id}" 
 
 	def form_valid(self, form):
 		form.instance.user == self.request.user
@@ -101,7 +101,6 @@ class DeleteProductView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 			return True
 		else:
 			return False
-
 
 
 class UserProductlistView(ListView):
@@ -130,7 +129,7 @@ class DeleteComment(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 	model = Comment
 	template_name = 'commentdelete.html'
 	context_object_name = 'comment'
-	success_url = reverse_lazy("home")
+	success_url = reverse_lazy('home')
 
 	def test_func(self):
 		comment = self.get_object()
@@ -143,10 +142,11 @@ class DeleteComment(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 @login_required
 def EditComment(request,pk):
 	comment = Comment.objects.get(pk = pk )
+	id = comment.product.pk
 	form=CommentForm(request.POST or None, instance=comment)
 	if request.method == 'POST':
 		if form.is_valid():
 			if comment.user == request.user:
 				form.save()
-				return redirect("home")
+				return redirect("/product/{}".format(id))
 	return render(request, 'commentupdate.html', {'form':form, 'comment':comment})

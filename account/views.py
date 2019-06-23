@@ -47,6 +47,8 @@ def profile(request):
 
 
 def UserProfile(request, pk):
-    product = Product.objects.get(pk = pk)
+    product = User.objects.get(pk=pk)
     return render(request, 'userprofile.html', {"product":product})
+
+
 

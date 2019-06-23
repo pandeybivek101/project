@@ -9,7 +9,6 @@
        <a href="{% url 'update_product' product.id %}"><button class="btn btn-warning">Edit</button></a>
        <a href="{% url 'delete_product' product.id %}"><button class="btn btn-danger">Delete</button></a>
       {% endif %}
-        <p><a class="nav-item nav-link active" href="{% url 'home'%}">BACK</a></p> 
         <p class="card-text" align="text-center">TITLE:<a href="{{product.url}}">{{product.title}}</a></p>
         <p class="card-text" align="text-center">PUBLISH DATE:{{product.pub_date}}</p>
         <p class="card-text" align="text-center">UPLOADED BY:{{product.user.username}}</p>
@@ -31,7 +30,9 @@
         </form>
         <div><h2>Comment:</h2>
         {% for item in comment %}
-        <p><a class="mr-2" href=""><img class="rounded-circle" src="{{item.user.profile.image.url}}" height="50", width="50">{{item.user}}</a>{{item.comment}} </t></t>
+        <p>
+        <a class="mr-2" href="{% url 'userprofile' item.user.pk %}">
+        <img class="rounded-circle" src="{{item.user.profile.image.url}}" height="50", width="50">{{item.user}}</a>{{item.comment}} </t></t>
         {% if item.user == user or item.product.user == user %}
         <a href="{% url 'deletecomment' item.pk %}">Delete</a>
        {% endif %}

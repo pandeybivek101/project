@@ -1,14 +1,14 @@
 {%extends 'base.html'%}
 {%block content%}
-<h1>{{product.user}}'s Profile</h1>
+<h1>{{product.username}}'s Profile</h1>
 <div class="container" align="text-center">
   <div class="row">
     <div class="col-md-4">
-    <div class="card-text" align="text-center"><img class="rounded-circle account-img" src="{{product.user.profile.image.url}}" height="50" width="50" >
+    <div class="card-text" align="text-center"><img class="rounded-circle account-img" src="{{product.profile.image.url}}" height="50" width="50" >
       <h2>{{product.user}}</h2></a>
-      <a href="{% url 'userproduct' product.user.username %}">{{product.user}}'s Post</a>
+      <a href="{% url 'userproduct' product.username %}">{{product.username}}'s Post</a>
       </div>
-      <p class="card-text" align="text-center">{{product.user.email}}</a>
+      <p class="card-text" align="text-center">{{product.email}}</a>
       </p>  
     </div> 
   </div>
