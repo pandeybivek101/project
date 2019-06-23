@@ -93,7 +93,9 @@ class UpdateProductview(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class DeleteProductView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 	model = Product
 	template_name = "deleteproduct.html"
-	success_url = reverse_lazy('home')
+
+	def get_success_url(self):
+		return reverse_lazy("home")
 
 	def test_func(self):
 		product = self.get_object()
@@ -129,7 +131,9 @@ class DeleteComment(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 	model = Comment
 	template_name = 'commentdelete.html'
 	context_object_name = 'comment'
-	success_url = reverse_lazy('home')
+	
+	def get_success_url(self):
+		return reverse_lazy('detailview', kwargs={'pk':self.object.product.id})
 
 	def test_func(self):
 		comment = self.get_object()
