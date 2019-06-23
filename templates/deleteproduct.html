@@ -6,7 +6,7 @@
 	<form action="{% url 'delete_product' object.id %}" method="POST">
 	{% csrf_token %}
 	<button class="btn btn-danger" type="submit">Delete</button>
-	<a href="{% url 'detailview' object.id %}"><button class="btn btn-info">Cancel</button></a>
 	</form>	
+	<a href="{% url 'detailview' object.id %}"><button class="btn btn-info">Cancel</button></a>
 </div>
 {% endblock %}
