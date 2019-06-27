@@ -7,49 +7,55 @@
       <div class="col-md-4">
         <img class="card-img-top" src="{{product.image.url}}" height="300" width="300">
         {% if product.user == user %}
-       <a href="{% url 'update_product' product.id %}"><button class="btn btn-warning">Edit</button></a>
-       <a href="{% url 'delete_product' product.id %}"><button class="btn btn-danger">Delete</button></a>
-      {% endif %}
+        <a href="{% url 'update_product' product.id %}"><button class="btn btn-warning">Edit</button></a>
+        <a href="{% url 'delete_product' product.id %}"><button class="btn btn-danger">Delete</button></a>
+        {% endif %}
         <p class="card-text" align="text-center">TITLE:{{product.title}}</p>
         <p>Buy through link <br>
          <a class="btn btn-primary" href="{{product.url}}">Buy</a>
-        </p>
-        <p class="card-text" align="text-center">PUBLISH DATE:{{product.pub_date}}</p>
-        <p class="card-text" align="text-center">UPLOADED BY:{{product.user.username}}</p>
-      </div>
-      <div class="col-md-4">
-        <form id="upvote1" method="POST" action="{% url 'upvote' product.id %}">
-          {% csrf_token %}
-          <input type="hidden"/>
-         <button class="btn btn-info">{{product.total_like}}Like</button>
-        </form> 
-        <p class="card-text" align="text-center">BODY:{{product.body}}</p>
-        </div>
-        <div class="col-md-4">
-        <form method="POST" action="{% url 'detailview' product.pk %}">
+       </p>
+       <p class="card-text" align="text-center">PUBLISH DATE:{{product.pub_date}}</p>
+       <p class="card-text" align="text-center">UPLOADED BY:{{product.user.username}}</p>
+     </div>
+     <div class="col-md-4">
+      <form id="upvote1" method="POST" action="{% url 'upvote' product.id %}">
         {% csrf_token %}
-          {{form}}
-          <button class="btn btn-primary">comment</button>
-        </form>
-        <div><h2>Comment:({{commentlist.count}})</h2>
+        <input type="hidden"/>
+        <button class="btn btn-info">{{product.total_like}}Like</button>
+      </form> 
+      <p class="card-text" align="text-center">BODY:{{product.body}}</p>
+    </div>
+    <div class="col-md-4">
+      <form method="POST" action="{% url 'detailview' product.pk %}">
+        {% csrf_token %}
+        {{form}}
+        <button class="btn btn-primary">comment</button>
+      </form>
+      <div><h2>Comment:({{commentlist.count}})</h2>
         {% for item in commentlist %}
         <p>
-        <a class="mr-2" href="{% url 'userprofile' item.user.pk %}">
-        <img class="rounded-circle" src="{{item.user.profile.image.url}}" height="50", width="50">{{item.user}}</a>{{item.comment}} </t></t>
-        {% if item.user == user or item.product.user == user %}
-        <a href="{% url 'deletecomment' item.pk %}">Delete</a>
-       {% endif %}
-       {% if item.user == user %}
-         <a href="{% url 'editcomment' item.pk %}">Edit</a>
-       {% endif %}
+          <a class="mr-2" href="{% url 'userprofile' item.user.pk %}">
+            <img class="rounded-circle" src="{{item.user.profile.image.url}}" height="50", width="50">
+            {% if item.user == user %}
+            <a href="{% url 'profile' %}">Me</a> 
+            {% else%}
+            <a href="{% url 'userprofile' item.user.pk %}">{{item.user}}</a> 
+            {% endif %}
+          </a><b>{{item.comment}}</b>
+          {% if item.user == user or item.product.user == user %}
+          <a href="{% url 'deletecomment' item.pk %}">Delete</a>
+          {% endif %}
+          {% if item.user == user %}
+          <a href="{% url 'editcomment' item.pk %}">Edit</a>
+          {% endif %}
           <a href="{% url 'addreply' item.pk %}">Replies ({{item.replies_set.count}})</a>
         </p></p>
         <p>{{item.commented_date|date:"M d, Y"}}</p>
         {% endfor %}
-        </div>
       </div>
-    </div> 
-  </div>
+    </div>
+  </div> 
+</div>
 </div>
 <form id="upvote" method="POST" action="{% url 'upvote' product.id %}">
   {% csrf_token %}

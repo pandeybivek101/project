@@ -7,14 +7,20 @@
 		{{form.as_p}}
 		<button class="btn btn-primary">Reply</button>
 	</form>
-	<div>
-		{% for item in all_replies%}
-		<p><a href=""><img class="rounded-circle" src="{{item.replied_user.profile.image.url}}" height="50" width="50">{{item.replied_user}}</a></p><h3>{{item.reply}}</h3>
+	{% for item in all_replies%}
+	    <p><img class="rounded-circle" src="{{item.replied_user.profile.image.url}}" height="50" width="50">
+        {% if item.replied_user == user %}
+         <a href="{% url 'profile' %}">Me</a> 
+        {% else%}
+         <a href="{% url 'userprofile' item.replied_user.pk %}">{{item.replied_user}}</a> 
+        {% endif %}
+	    <b>{{item.reply}}</b>
 		{% if item.replied_user == user %}
 		<a href="{% url 'deletereply' item.pk %}">Delete</a>
 		<a href="{% url 'editreply' item.pk %}">Edit</a>
 		{% endif %}
 		<p>{{ item.replied_date|date:"M d, Y"}}</p>
-		{% endfor %}
-	</div>
+		<p>
+	{% endfor %}
+</div>
 {% endblock %}
