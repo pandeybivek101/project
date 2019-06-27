@@ -11,7 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.views.generic import *
 from django.urls import reverse_lazy, reverse
-
+from django.contrib.messages.views import SuccessMessageMixin
 
 # Create your views here.
 def HomeView(request):
@@ -35,7 +35,7 @@ class AddProductItem(LoginRequiredMixin, CreateView):
 
 def DetailView(request, pk):
 	product=get_object_or_404(Product,pk=pk)
-	comment = product.comment_set.all().order_by('-commented_date')
+	commentlist = product.comment_set.all().order_by('-commented_date')
 	if request.method == 'POST':
 		form = CommentForm(request.POST)
 		if form.is_valid():
@@ -43,10 +43,13 @@ def DetailView(request, pk):
 			comment.user = request.user
 			comment.product = product
 			comment.save()
+			messages.success(request, f'Comment SuccessFully Added')
 			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 	else:
 		form = CommentForm()
-	return render(request, 'detailview.html', {'product':product, 'comment':comment, 'form':form})
+	return render(request,
+	 'detailview.html', 
+	 {'product':product, 'commentlist':commentlist, 'form':form, 'replies_count':'replies_count'})
 
 
 @login_required
@@ -90,9 +93,10 @@ class UpdateProductview(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 			return False
 
 
-class DeleteProductView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class DeleteProductView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
 	model = Product
 	template_name = "deleteproduct.html"
+	success_message = 'Item Deleted Successfully'
 
 	def get_success_url(self):
 		return reverse_lazy("home")
@@ -127,10 +131,11 @@ class productcatagorylist(UserProductlistView, ListView):
 		return Product.objects.filter(catagory = catagory).order_by('-pub_date')
 
 
-class DeleteComment(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class DeleteComment(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
 	model = Comment
 	template_name = 'commentdelete.html'
 	context_object_name = 'comment'
+	success_message = "Object deleted"
 	
 	def get_success_url(self):
 		return reverse_lazy('detailview', kwargs={'pk':self.object.product.id})
@@ -152,5 +157,60 @@ def EditComment(request,pk):
 		if form.is_valid():
 			if comment.user == request.user:
 				form.save()
+				messages.info(request, f'Your comment Successfully Edited')
 				return redirect("/product/{}".format(id))
 	return render(request, 'commentupdate.html', {'form':form, 'comment':comment})
+
+
+@login_required
+def AddReply(request, pk):
+	comment = get_object_or_404(Comment, pk=pk)
+	all_replies = comment.replies_set.all().order_by('-replied_date')
+	if request.method == 'POST':
+		form = ReplyForm(request.POST)
+		if form.is_valid():
+			data = form.save(commit = False)
+			data.comment = comment
+			data.replied_user = request.user
+			data.save()
+			return redirect(request.META.get('HTTP_REFERER'))
+	else:
+		form = ReplyForm()
+	return render(request, 'replycomment.html', {'form':form, 'comment':comment, 'all_replies':all_replies})
+
+
+
+class DeleteReplyView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
+	model = Replies
+	template_name = 'replydelete.html'
+	context_object_name = 'replies'
+	success_url=reverse_lazy("home")
+
+	def get_success_url(self):
+		return reverse_lazy('addreply', kwargs={'pk':self.object.comment.id})
+
+	def test_func(self):
+		replies = self.get_object()
+		if replies.replied_user == self.request.user:
+			return True
+		else:
+			return False
+
+
+class EditReplyView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+	model = Replies
+	form_class = ReplyForm
+	template_name = "editreply.html"
+	context_object_name='replies'
+	
+	def get_success_url(self):
+		return reverse_lazy('addreply', kwargs={'pk':self.object.comment.id})
+
+	def test_func(self):
+		replies = self.get_object()
+		if replies.replied_user == self.request.user:
+			return True
+		else:
+			return False
+
+

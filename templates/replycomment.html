@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Reply({{all_replies.count}})</h2>
+<div class="col-md-4">
+	<form method="POST" action="{% url 'addreply' comment.pk %}">
+		{% csrf_token %}
+		{{form.as_p}}
+		<button class="btn btn-primary">Reply</button>
+	</form>
+	<div>
+		{% for item in all_replies%}
+		<p><a href=""><img class="rounded-circle" src="{{item.replied_user.profile.image.url}}" height="50" width="50">{{item.replied_user}}</a></p><h3>{{item.reply}}</h3>
+		{% if item.replied_user == user %}
+		<a href="{% url 'deletereply' item.pk %}">Delete</a>
+		<a href="{% url 'editreply' item.pk %}">Edit</a>
+		{% endif %}
+		<p>{{ item.replied_date|date:"M d, Y"}}</p>
+		{% endfor %}
+	</div>
+{% endblock %}

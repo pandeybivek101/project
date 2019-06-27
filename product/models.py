@@ -37,6 +37,17 @@ class Comment(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	product = models.ForeignKey(Product, on_delete=models.CASCADE)
 	commented_date = models.DateTimeField(auto_now_add = True)
+	def __str__(self):
+		return "{} {}".format(self.user, self.product)
+
+class Replies(models.Model):
+	reply = models.CharField(max_length=100)
+	comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+	replied_user = models.ForeignKey(User, on_delete=models.CASCADE)
+	replied_date = models.DateTimeField(auto_now_add = True)
+
+	def __str__(self):
+		return "{} {}".format(self.comment.id, self.replied_user)
 
 
 

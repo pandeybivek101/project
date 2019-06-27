@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Delete Reply</h1>
+<div>
+	Do you want to delete Reply ? <br>
+	<form action="{% url 'deletereply' replies.pk %}" method="POST">
+	{% csrf_token %}
+	<button class="btn btn-danger" type="submit">Delete</button>
+	</form>
+	<a class="btn btn-info" href="{% url 'addreply' replies.comment.pk %}">canceal</a>
+</div>
+{% endblock %}

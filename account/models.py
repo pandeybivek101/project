@@ -8,8 +8,8 @@ class Profile(models.Model):
 	image = models.ImageField(default ='Screenshot_156.png', upload_to='static/')
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-	"""def __str__(self):
-		return self.user"""
+	def __str__(self):
+		return self.user.username
 
 @receiver(post_save, sender = User)
 def create_user_profile(sender, instance, created, **kwargs):

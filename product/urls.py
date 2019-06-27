@@ -18,7 +18,6 @@ from . import views
 from product.views import *
 urlpatterns =[
     path('addproduct/', AddProductItem.as_view(), name='addproduct'),
-    #path('addproduct/', views.AddProductItem, name='addproduct'),
     path('search/', views.Search, name='search'),
     path('<int:pk>', views.DetailView, name='detailview'),
     path('<int:pk>/update-product', UpdateProductview.as_view(), name='update_product'),
@@ -28,4 +27,7 @@ urlpatterns =[
     path('<int:pk>/upvote', views.LikeProduct, name='upvote'),
     path('deletecomment/<int:pk>', DeleteComment.as_view(), name = 'deletecomment'),
     path('editcomment/<int:pk>', views.EditComment, name = 'editcomment'),
+    path('reply/<int:pk>', views.AddReply, name='addreply'),
+    path('replyedit/<int:pk>', EditReplyView.as_view(), name = 'editreply'),
+    path('replydelete/<int:pk>', DeleteReplyView.as_view(), name = 'deletereply'),
 ]

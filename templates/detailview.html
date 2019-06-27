@@ -5,14 +5,17 @@
   <div class="container" align="text-center">
     <div class="row">
       <div class="col-md-4">
-      {% if product.user == user %}
+        <img class="card-img-top" src="{{product.image.url}}" height="300" width="300">
+        {% if product.user == user %}
        <a href="{% url 'update_product' product.id %}"><button class="btn btn-warning">Edit</button></a>
        <a href="{% url 'delete_product' product.id %}"><button class="btn btn-danger">Delete</button></a>
       {% endif %}
-        <p class="card-text" align="text-center">TITLE:<a href="{{product.url}}">{{product.title}}</a></p>
+        <p class="card-text" align="text-center">TITLE:{{product.title}}</p>
+        <p>Buy through link <br>
+         <a class="btn btn-primary" href="{{product.url}}">Buy</a>
+        </p>
         <p class="card-text" align="text-center">PUBLISH DATE:{{product.pub_date}}</p>
         <p class="card-text" align="text-center">UPLOADED BY:{{product.user.username}}</p>
-        <img class="card-img-top" src="{{product.image.url}}" height="500" width="500">
       </div>
       <div class="col-md-4">
         <form id="upvote1" method="POST" action="{% url 'upvote' product.id %}">
@@ -28,8 +31,8 @@
           {{form}}
           <button class="btn btn-primary">comment</button>
         </form>
-        <div><h2>Comment:</h2>
-        {% for item in comment %}
+        <div><h2>Comment:({{commentlist.count}})</h2>
+        {% for item in commentlist %}
         <p>
         <a class="mr-2" href="{% url 'userprofile' item.user.pk %}">
         <img class="rounded-circle" src="{{item.user.profile.image.url}}" height="50", width="50">{{item.user}}</a>{{item.comment}} </t></t>
@@ -39,6 +42,7 @@
        {% if item.user == user %}
          <a href="{% url 'editcomment' item.pk %}">Edit</a>
        {% endif %}
+           <a href="{% url 'addreply' item.pk %}">Replies</a>
         </p></p>
         <p>{{item.commented_date|date:"M d, Y"}}</p>
         {% endfor %}
