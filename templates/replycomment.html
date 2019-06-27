@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
+<div>
+	Comment:<p>{{comment.comment}}</p>
+</div>
 <h2>Reply({{all_replies.count}})</h2>
 <div class="col-md-4">
 	<form method="POST" action="{% url 'addreply' comment.pk %}">
