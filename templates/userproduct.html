@@ -6,27 +6,29 @@
     {% for pro in product%}
     <div class="col-md-4">
       <p class="card-text" align="text-center"><a href="{%url 'detailview' pro.pk%}"><h2>{{pro.title}}</h2></a>
-        <img class="rounded-circle article-img" src="{{pro.user.profile.image.url}}">
+      <img class="rounded-circle article-img" src="{{pro.user.profile.image.url}}">
         {% if pro.user == user %}
-        <a class="mr-2" href="{% url 'userproduct' pro.user.username%}">My post</a>
+        <a class="mr-2" href="{% url 'profile' %}">My post</a>
         {% else %}
-        <a class="mr-2" href="{% url 'userproduct' pro.user.username%}">{{ pro.user }}</a>
+        <a class="mr-2" href="{% url 'userprofile' pro.user.pk %}">{{ pro.user }}</a>
         {% endif %}
       </p>
       <div class="card mb-4 shadow-sm">
-        <a href="{%url 'detailview' pro.pk%}"><img class="card-img-top" src="{{pro.image.url}}" height="200" width="300"></a>
+        <a href="{%url 'detailview' pro.pk %}"><img class="card-img-top" src="{{pro.image.url}}" height="200" width="300"></a>
         <div class="card-body">
           <div class="card-text">
-            <form id="upvote1" method="POST" action="{% url 'upvote' pro.id %}">
-              {% csrf_token %}
-              <input type="hidden"/>
-              <button class="btn btn-info">{{pro.total_like}}Like</button>
-            </form>
-            Posted On:{{pro.pub_date|date:"M d, Y"}}</div>  
-            <p class="card-text">Price:{{pro.price}}</p>
-          </div>
-        </div>  
-      </div>
+          <form id="upvote1" method="POST" action="{% url 'upvote' pro.id %}">
+          {% csrf_token %}
+            <input type="hidden"/>
+            <button class="btn btn-info">{{pro.total_like}}Like</button>
+          </form>
+          <p><a href="{%url 'detailview' pro.pk %}">comment({{pro.comment_set.count}})</a></p>
+          <b>Price:{{pro.price}}</b>
+          </div>  
+          <p class="card-text"> Posted On:{{pro.pub_date|date:"M d, Y"}}</p>
+        </div>   
+      </div>  
+    </div>
       {% endfor %}
     </div>
   </div>

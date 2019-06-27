@@ -42,11 +42,7 @@
        {% if item.user == user %}
          <a href="{% url 'editcomment' item.pk %}">Edit</a>
        {% endif %}
-       {% if item.user == user %}
-          <a href="{% url 'addreply' item.pk %}">Replies</a>
-       {% else %}
-           <a href="{% url 'addreply' item.pk %}">Replies</a>
-        {% endif %}
+          <a href="{% url 'addreply' item.pk %}">Replies ({{item.replies_set.count}})</a>
         </p></p>
         <p>{{item.commented_date|date:"M d, Y"}}</p>
         {% endfor %}
