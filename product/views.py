@@ -49,7 +49,7 @@ def DetailView(request, pk):
 		form = CommentForm()
 	return render(request,
 	 'detailview.html', 
-	 {'product':product, 'commentlist':commentlist, 'form':form, 'replies_count':'replies_count'})
+	 {'product':product, 'form':form, 'commentlist':commentlist})
 
 
 @login_required

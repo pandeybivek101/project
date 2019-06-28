@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
 <div>
-	Comment:<p>{{comment.comment}}</p>
+	<h2>Comment:{{comment.comment}}</h2>
 </div>
-<h2>Reply({{all_replies.count}})</h2>
+<h3>Replies({{all_replies.count}})</h3>
 <div class="col-md-4">
 	<form method="POST" action="{% url 'addreply' comment.pk %}">
 		{% csrf_token %}
-		{{form.as_p}}
+		{{form|crispy}}
 		<button class="btn btn-primary">Reply</button>
 	</form>
 	{% for item in all_replies%}

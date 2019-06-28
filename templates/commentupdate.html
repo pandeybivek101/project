@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
 <h2>Update</h2>
 <div class="col-md-4">
 	<form method="POST" action="{% url 'editcomment' comment.pk %}">
 		{% csrf_token %}
-		{{form.as_p}}
+		{{form|crispy}}
 		<button class="btn btn-primary">Update</button>
 	</form>
 {% endblock %}
