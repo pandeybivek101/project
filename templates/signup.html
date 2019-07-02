@@ -2,10 +2,8 @@
 {% load crispy_forms_tags %}
 {% block content %}
 <div class="row">
-	<div class="col-md-4">
-
-	</div>
-	<div class="col-md-4">
+	<div class="col-md-3"></div>
+	<div class="col-md-5">
 		<h1>Signup</h1>
 		{{error}}
 		<form name="" method="POST" action="{% url 'signup' %}">
@@ -14,8 +12,6 @@
 			<input class="btn btn-primary" type="submit" value="submit">
 		</form>
 	</div>
-	<div class="col-md-4">
-
-	</div>
+	<div class="col-md-3"></div>
 </div>
 {% endblock %}

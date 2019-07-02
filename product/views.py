@@ -49,7 +49,7 @@ def DetailView(request, pk):
 		form = CommentForm()
 	return render(request,
 	 'detailview.html', 
-	 {'product':product, 'form':form, 'commentlist':commentlist})
+	 {'product':product, "form":form, 'commentlist':commentlist})
 
 
 @login_required
@@ -68,7 +68,7 @@ def LikeProduct(request,pk):
 def Search(request):
     query=request.GET.get('q')
     if query:
-	    result=Product.objects.filter(title__icontains=query)
+	    result=Product.objects.filter(title__icontains = query)
     else:
 	    result=[]
 	    messages.error(request, f'Please enter item title to search')
@@ -129,6 +129,7 @@ class productcatagorylist(UserProductlistView, ListView):
 	def get_queryset(self):
 		catagory = get_object_or_404(Catagory, catagory=self.kwargs.get('catagory'))
 		return Product.objects.filter(catagory = catagory).order_by('-pub_date')
+
 
 
 class DeleteComment(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
