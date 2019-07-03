@@ -88,7 +88,8 @@ class DeleteProductView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageM
 	success_message = 'Item Deleted Successfully'
 
 	def get_success_url(self):
-		return reverse_lazy("home")
+		p = HttpResponseRedirect(request.META.get('HTTP_REFERER')) 
+		return p
 
 	def test_func(self):
 		product = self.get_object()

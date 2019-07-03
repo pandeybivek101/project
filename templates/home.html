@@ -12,7 +12,7 @@
     <div class="col-md-4"></div>
     <div class="col-md-4">
         {% if product.has_previous %}
-        <a class="btn btn-outline-info mb-4" href="?page={{page_obj.previous_page_number}}">Previous</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{product.previous_page_number}}">Previous</a>
         {% endif %}
         {% for num in product.paginator.page_range %}
         {% if product.number == num %}
