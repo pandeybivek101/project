@@ -30,4 +30,5 @@ urlpatterns =[
     path('reply/<int:pk>', views.AddReply, name='addreply'),
     path('replyedit/<int:pk>', EditReplyView.as_view(), name = 'editreply'),
     path('replydelete/<int:pk>', DeleteReplyView.as_view(), name = 'deletereply'),
+    path('addcomment/<int:pk>', views.AddComment, name = 'addcomment'),
 ]

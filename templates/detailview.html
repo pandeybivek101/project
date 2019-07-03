@@ -27,12 +27,13 @@
       <p class="card-text" align="text-center">BODY:{{product.body}}</p>
     </div>
     <div class="col-md-4">
-      <form method="POST" action="{% url 'detailview' product.pk %}">
+      <form method="POST" action="{% url 'addcomment' product.pk %}">
         {% csrf_token %}
         {{form|crispy}}
         <button class="btn btn-primary">comment</button>
       </form>
-      <div><h2>Comment:({{commentlist.count}})</h2>
+      <div>
+      <h2>Comment:({{commentlist.count}})</h2>
         {% for item in commentlist %}
         <p>
           <a class="mr-2" href="{% url 'userprofile' item.user.pk %}">

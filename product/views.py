@@ -15,8 +15,8 @@ from django.contrib.messages.views import SuccessMessageMixin
 
 # Create your views here.
 def HomeView(request):
-	name = Catagory.objects.all()
 	product=Product.objects.all().order_by('-pub_date')
+	name = Catagory.objects.all()
 	paginator=Paginator(product, 3)
 	page=request.GET.get('page')
 	product=paginator.get_page(page)
@@ -36,20 +36,9 @@ class AddProductItem(LoginRequiredMixin, CreateView):
 def DetailView(request, pk):
 	product=get_object_or_404(Product,pk=pk)
 	commentlist = product.comment_set.all().order_by('-commented_date')
-	if request.method == 'POST':
-		form = CommentForm(request.POST)
-		if form.is_valid():
-			comment = form.save(commit = False)
-			comment.user = request.user
-			comment.product = product
-			comment.save()
-			messages.success(request, f'Comment SuccessFully Added')
-			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-	else:
-		form = CommentForm()
-	return render(request,
-	 'detailview.html', 
-	 {'product':product, "form":form, 'commentlist':commentlist})
+	form = CommentForm()
+	return render(request,'detailview.html', 
+	 {'product':product, 'commentlist':commentlist, 'form':form})
 
 
 @login_required
@@ -129,6 +118,23 @@ class productcatagorylist(UserProductlistView, ListView):
 	def get_queryset(self):
 		catagory = get_object_or_404(Catagory, catagory=self.kwargs.get('catagory'))
 		return Product.objects.filter(catagory = catagory).order_by('-pub_date')
+
+@login_required
+def AddComment(request, pk):
+	product=get_object_or_404(Product,pk=pk)
+	if request.method == 'POST':
+		form = CommentForm(request.POST)
+		if form.is_valid():
+			comment = form.save(commit = False)
+			comment.user = request.user
+			comment.product = product
+			comment.save()
+			messages.success(request, f'Comment SuccessFully Added')
+			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+	else:
+		form = CommentForm()
+	return render(request, 'detailview.html', {"form":form, "product":product})
+    
 
 
 
