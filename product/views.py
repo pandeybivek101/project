@@ -12,6 +12,7 @@ from django.contrib import messages
 from django.views.generic import *
 from django.urls import reverse_lazy, reverse
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import Q
 
 # Create your views here.
 def HomeView(request):
@@ -57,7 +58,7 @@ def LikeProduct(request,pk):
 def Search(request):
     query=request.GET.get('q')
     if query:
-	    result=Product.objects.filter(title__icontains = query)
+	    result=Product.objects.filter(Q(title__icontains = query) | Q(catagory__catagory__icontains = query)).order_by('-pub_date')
     else:
 	    result=[]
 	    messages.error(request, f'Please enter item title to search')
@@ -88,8 +89,7 @@ class DeleteProductView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageM
 	success_message = 'Item Deleted Successfully'
 
 	def get_success_url(self):
-		p = HttpResponseRedirect(request.META.get('HTTP_REFERER')) 
-		return p
+		return reverse_lazy("home")
 
 	def test_func(self):
 		product = self.get_object()
@@ -120,6 +120,7 @@ class productcatagorylist(UserProductlistView, ListView):
 		catagory = get_object_or_404(Catagory, catagory=self.kwargs.get('catagory'))
 		return Product.objects.filter(catagory = catagory).order_by('-pub_date')
 
+
 @login_required
 def AddComment(request, pk):
 	product=get_object_or_404(Product,pk=pk)
@@ -136,7 +137,6 @@ def AddComment(request, pk):
 		form = CommentForm()
 	return render(request, 'detailview.html', {"form":form, "product":product})
     
-
 
 
 class DeleteComment(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
@@ -220,5 +220,5 @@ class EditReplyView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 			return True
 		else:
 			return False
-
+ 
 

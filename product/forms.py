@@ -15,3 +15,4 @@ class ReplyForm(forms.ModelForm):
 	class Meta:
 		model = Replies
 		fields = ['reply']
+
