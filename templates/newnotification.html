@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% load notification_tags %}
+{% render_notifications using request.user.notifications.active %}
+{% endblock %}

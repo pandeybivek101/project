@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from .models import *
 from django.views.generic import *
 from product.models import Product
+from notifications.signals import notify
 
 # Create your views here.
 
@@ -24,13 +25,13 @@ def SignUp(request):
     return render(request, 'signup.html', {"form":form})
 
 
-@login_required(login_url="home")
+@login_required
 def Logout(request):
     logout(request)
     return redirect("home")
 
 
-@login_required(login_url="home")
+@login_required
 def profile(request):
     if request.method == 'POST':
         user_form = UserUpdateForm(request.POST, instance=request.user)
@@ -50,5 +51,6 @@ def UserProfile(request, pk):
     product = User.objects.get(pk=pk)
     return render(request, 'userprofile.html', {"product":product})
 
-
+def usernotification(request):
+    return render(request, 'newnotification.html')
 

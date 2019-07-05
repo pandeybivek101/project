@@ -13,6 +13,9 @@ from django.views.generic import *
 from django.urls import reverse_lazy, reverse
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
+from notify.signals import notify
+
+
 
 # Create your views here.
 def HomeView(request):
@@ -51,6 +54,8 @@ def LikeProduct(request,pk):
 			product.likes.remove(user)
 		else:
 			product.likes.add(user)
+			notify.send(request.user, recipient=product.user, actor=request.user, 
+				verb = 'Liked your Post', nf_type='Liked your Post')
 		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   
 	return render(request , 'home.html' ,{'product':product})
 
@@ -131,6 +136,8 @@ def AddComment(request, pk):
 			comment.user = request.user
 			comment.product = product
 			comment.save()
+			notify.send(request.user, recipient=product.user, actor=request.user, 
+				verb = 'Commented on your Post', nf_type='Commented on your Post')
 			messages.success(request, f'Comment SuccessFully Added')
 			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 	else:
@@ -181,6 +188,8 @@ def AddReply(request, pk):
 			data.comment = comment
 			data.replied_user = request.user
 			data.save()
+			notify.send(request.user, recipient=comment.user, actor=request.user, 
+				verb = 'Replied your comment', nf_type='Replied your comment')
 			return redirect(request.META.get('HTTP_REFERER'))
 	else:
 		form = ReplyForm()
@@ -221,4 +230,3 @@ class EditReplyView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 		else:
 			return False
  
-
