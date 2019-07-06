@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Catagory, Comment, Replies
+from .models import Product, Catagory, Comment, Replies, Message
 
 
 class ProductStore(admin.ModelAdmin):
@@ -20,3 +20,8 @@ admin.site.register(Comment, Commentlist)
 class RepList(admin.ModelAdmin):
 	list_display = ['replied_user','comment', 'reply']
 admin.site.register(Replies, RepList)
+
+
+class MsgList(admin.ModelAdmin):
+	list_display=['message_user','message']
+admin.site.register(Message, MsgList)

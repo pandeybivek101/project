@@ -52,8 +52,10 @@ def LikeProduct(request,pk):
 	if request.method=='POST':
 		if product.likes.filter(id=user.id).exists():
 			product.likes.remove(user)
+			liked = False
 		else:
 			product.likes.add(user)
+			liked = True
 			notify.send(request.user, recipient=product.user, actor=request.user, 
 				verb = 'Liked your Post', nf_type='Liked your Post')
 		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   
@@ -63,7 +65,8 @@ def LikeProduct(request,pk):
 def Search(request):
     query=request.GET.get('q')
     if query:
-	    result=Product.objects.filter(Q(title__icontains = query) | Q(catagory__catagory__icontains = query)).order_by('-pub_date')
+	    result=Product.objects.filter(Q(title__icontains = query) 
+	    	| Q(catagory__catagory__icontains = query)).order_by('-pub_date')
     else:
 	    result=[]
 	    messages.error(request, f'Please enter item title to search')
@@ -229,4 +232,27 @@ class EditReplyView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 			return True
 		else:
 			return False
+
+
+def AboutView(request):
+	form = MessageForm()
+	return render(request, 'about.html',{'form':form})
+
+
+@login_required
+def AddMessage(request):
+	if request.method == 'POST':
+		form = MessageForm(request.POST)
+		if form.is_valid():
+			Msg=form.save(commit = False)
+			Msg.message_user = request.user
+			Msg.save()
+			messages.success(request, f'ThankYou four Feedback')
+			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+	else:
+		form = MessageForm()
+	return render(request, 'about.html', {"form":form, "product":product})
+    
+
+
  

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="row">
+	<div class="col-md-1"></div>
+	<div class="col-md-10">
+		<div class="card">
+      <div class="card-header">
+        About us
+      </div>
+      <div class="card-body">
+        <blockquote class="blockquote mb-0">
+          <p>This entire process is known as marketing management " the art and science of choosing target markets and getting, keeping, and growing customers through creating, delivering, and communicating superior customer value" (Kotler & Keller, p.5). To be successful in business, "a consumer does not buy a whole of physical components of the product but it is usefulness, function, satisfaction of consumer's needs, solving the problem, etc" (Dubrouski, , p.1). "That is why the product is a whole of tangible and intangible components which means satisfaction of consumer's needs and desires, solving the problem"(Dubrouski, p.1). Companies and managers must learn to utilize marketing research, as well as, strategy skills to fulfill customers' satisfaction. Management has to focus on exclusive marketing challenges presented by the new era of the 21st century. Management has to be able to utilize inventive, dominant, and cost effective marketing techniques that will support the future success of the organization. Companies must meet,"the increasing importance of services as part of a product (offer, offering package) which cannot be neglected" (Dubrouski, p.1). Exploring the purpose of market research, as well as, evaluating the importance of such research, facilitates managers in realizing the importance of marketing to an organization's success and to be globally competitive. In the article: It is time</p>
+          <footer class="blockquote-footer">Please Leave your Message<cite title="Source Title"></cite></footer>
+        </blockquote>
+      </div>
+      <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+          <form method="POST" action="{% url 'message'%}">
+            {% csrf_token %}
+            {{form|crispy}}
+            <button class="btn btn-primary">Message</button>
+          </form>
+          <div class="card-header">
+
+          </div>
+        </div>
+        <div class="col-md-1"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-1"></div>
+</div>
+{% endblock %}
+
+
+

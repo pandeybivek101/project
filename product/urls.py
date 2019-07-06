@@ -33,4 +33,7 @@ urlpatterns =[
     path('replyedit/<int:pk>', EditReplyView.as_view(), name = 'editreply'),
     path('replydelete/<int:pk>', DeleteReplyView.as_view(), name = 'deletereply'),
     path('addcomment/<int:pk>', views.AddComment, name = 'addcomment'),
+    path('message/', views.AddMessage, name = 'message'),
+    path('about/', views.AboutView, name='about'),
+
 ]

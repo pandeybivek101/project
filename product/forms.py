@@ -11,8 +11,14 @@ class CommentForm(forms.ModelForm):
 		model = Comment
 		fields = ['comment']
 
+
 class ReplyForm(forms.ModelForm):
 	class Meta:
 		model = Replies
 		fields = ['reply']
 
+
+class MessageForm(forms.ModelForm):
+	class Meta:
+		model = Message
+		fields=['message']

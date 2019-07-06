@@ -51,4 +51,10 @@ class Replies(models.Model):
 		return "{} {}".format(self.comment.id, self.replied_user)
 
 
+class Message(models.Model):
+	message = models.TextField()
+	message_user = models.ForeignKey(User, on_delete=models.CASCADE)
+	message_date = models.DateTimeField(auto_now_add = True)
+
+
 

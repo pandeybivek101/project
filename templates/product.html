@@ -14,7 +14,11 @@
         <form id="upvote1" method="POST" action="{% url 'upvote' pro.id %}">
           {% csrf_token %}
           <input type="hidden"/>
+          {% if liked %}
+          <button class="btn btn-info">{{pro.total_like}}unLike</button>
+          {% else %}
           <button class="btn btn-info">{{pro.total_like}}Like</button>
+          {% endif %}
         </form>
         <p><a href="{%url 'detailview' pro.pk %}">comment({{pro.comment_set.count}})</a></p>
         <b>Price:{{pro.price}}</b>
