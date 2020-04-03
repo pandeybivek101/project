@@ -9,7 +9,6 @@ from django.contrib.auth.decorators import login_required
 from .models import *
 from django.views.generic import *
 from product.models import Product
-from notifications.signals import notify
 
 # Create your views here.
 

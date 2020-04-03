@@ -13,39 +13,63 @@ from django.views.generic import *
 from django.urls import reverse_lazy, reverse
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
-from notify.signals import notify
+from django.views import View
+from django.contrib.messages.views import SuccessMessageMixin
+from .mixins import *
 
 
 
 # Create your views here.
-def HomeView(request):
-	product=Product.objects.all().order_by('-pub_date')
-	name = Catagory.objects.all()
-	paginator=Paginator(product, 3)
-	page=request.GET.get('page')
-	product=paginator.get_page(page)
-	return render(request, "home.html", {'product':product, 'name':name})
+class HomeView(ListView):
+	template_name='home.html'
+	context_object_name='product'
+	model=Product
+	paginate_by=3
 
 		
-class AddProductItem(LoginRequiredMixin, CreateView):
+class AddProductItem(LoginRequiredMixin, FormValidMixin, CreateView):
 	form_class = AddProductForm
 	template_name = 'addproduct.html'
 	success_url = reverse_lazy("home")
 
-	def form_valid(self, form):
-		form.instance.user = self.request.user
-		return super().form_valid(form)
+
+class DetailView(DetailView):
+	model=Product
+	template_name='detailview.html'
+
+	def get_context_data(self, *args, **kwargs):
+		context=super(DetailView, self).get_context_data(*args, **kwargs)
+		product=self.get_object()
+		commentlist = product.comment_set.all().order_by('-commented_date')
+		form = CommentForm()
+		context.update({
+			'product':product,
+			'commentlist':commentlist,
+			'form':form
+			})
+		return context
 
 
-def DetailView(request, pk):
-	product=get_object_or_404(Product,pk=pk)
-	commentlist = product.comment_set.all().order_by('-commented_date')
-	form = CommentForm()
-	return render(request,'detailview.html', 
-	 {'product':product, 'commentlist':commentlist, 'form':form})
+class LikeProduct(AddMixin, View):
+	model=Product
+	template_name='home.html'
+	context_object_name='product'
+
+	def post(self, request, *args, **kwargs):
+		user=request.user
+		product=self.get_object()
+		if request.method=='POST':
+			if product.likes.filter(id=user.id).exists():
+				product.likes.remove(user)
+				liked = False
+			else:
+				product.likes.add(user)
+				liked = True
+			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   
+		return render(request , 'home.html' ,{'product':product})
 
 
-@login_required
+'''@login_required
 def LikeProduct(request,pk):
 	product=get_object_or_404(Product,pk=pk)
 	user=request.user
@@ -56,32 +80,34 @@ def LikeProduct(request,pk):
 		else:
 			product.likes.add(user)
 			liked = True
-			notify.send(request.user, recipient=product.user, actor=request.user, 
-				verb = 'Liked your Post', nf_type='Liked your Post')
 		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   
-	return render(request , 'home.html' ,{'product':product})
+	return render(request , 'home.html' ,{'product':product})'''
 
 
-def Search(request):
-    query=request.GET.get('q')
-    if query:
-	    result=Product.objects.filter(Q(title__icontains = query) 
-	    	| Q(catagory__catagory__icontains = query)).order_by('-pub_date')
-    else:
-	    result=[]
-	    messages.error(request, f'Please enter item title to search')
-    return render(request, 'search.html', {'result':result})
+class Search(View):
+	template_name='search.html'
+	model=Product
+
+	def get(self, request):
+		query=request.GET.get('q')
+		print(query)
+		if query:
+			result=self.model.objects.filter(Q(title__icontains = query) | Q(
+				catagory__catagory__icontains = query)).order_by('-pub_date')
+		else:
+			result=[]
+			messages.error(request, f'Please enter item title to search')
+		context={'result':result}
+		return render(request, self.template_name, context)
 
 
-class UpdateProductview(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+
+class UpdateProductview(LoginRequiredMixin, UserPassesTestMixin, FormValidMixin, UpdateView):
 	model = Product
 	form_class = AddProductForm
 	template_name = "updateproduct.html"
 	success_url = "/product/{id}" 
 
-	def form_valid(self, form):
-		form.instance.user == self.request.user
-		return super().form_valid(form)
 
 	def test_func(self):
 		product = self.get_object()
@@ -129,34 +155,13 @@ class productcatagorylist(UserProductlistView, ListView):
 		return Product.objects.filter(catagory = catagory).order_by('-pub_date')
 
 
-@login_required
-def AddComment(request, pk):
-	product=get_object_or_404(Product,pk=pk)
-	if request.method == 'POST':
-		form = CommentForm(request.POST)
-		if form.is_valid():
-			comment = form.save(commit = False)
-			comment.user = request.user
-			comment.product = product
-			comment.save()
-			notify.send(request.user, recipient=product.user, actor=request.user, 
-				verb = 'Commented on your Post', nf_type='Commented on your Post')
-			messages.success(request, f'Comment SuccessFully Added')
-			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-	else:
-		form = CommentForm()
-	return render(request, 'detailview.html', {"form":form, "product":product})
-    
 
-
-class DeleteComment(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
+class DeleteComment(LoginRequiredMixin, UserPassesTestMixin, DeleteCommentURLMixin, SuccessMessageMixin, DeleteView):
 	model = Comment
 	template_name = 'commentdelete.html'
 	context_object_name = 'comment'
 	success_message = "Object deleted"
 	
-	def get_success_url(self):
-		return reverse_lazy('detailview', kwargs={'pk':self.object.product.id})
 
 	def test_func(self):
 		comment = self.get_object()
@@ -166,48 +171,46 @@ class DeleteComment(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin
 			return False
 
 
-@login_required
-def EditComment(request,pk):
-	comment = Comment.objects.get(pk = pk )
-	id = comment.product.pk
-	form=CommentForm(request.POST or None, instance=comment)
-	if request.method == 'POST':
+class AddComment(LoginRequiredMixin, AddMixin, View, ):
+	template_name='detailview.html'
+	model=Product
+	context_object_name='product'
+	form_class=CommentForm
+
+	def get(self, request, *args, **kwargs):
+		form=self.form_class
+		product = self.get_object()
+		context={'form':form, 'product':product}
+		return render(request, self.template_name, context)
+
+
+	def post(self, request, *args, **kwargs):
+		form = self.form_class(request.POST)
 		if form.is_valid():
-			if comment.user == request.user:
-				form.save()
-				messages.info(request, f'Your comment Successfully Edited')
-				return redirect("/product/{}".format(id))
-	return render(request, 'commentupdate.html', {'form':form, 'comment':comment})
+			comment = form.save(commit = False)
+			comment.user = request.user
+			comment.product = self.get_object()
+			comment.save()
+			messages.success(request, f'Comment SuccessFully Added')
+			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+		return render(request, self.template_name, {'form':form})
 
 
-@login_required
-def AddReply(request, pk):
-	comment = get_object_or_404(Comment, pk=pk)
-	all_replies = comment.replies_set.all().order_by('-replied_date')
-	if request.method == 'POST':
-		form = ReplyForm(request.POST)
-		if form.is_valid():
-			data = form.save(commit = False)
-			data.comment = comment
-			data.replied_user = request.user
-			data.save()
-			notify.send(request.user, recipient=comment.user, actor=request.user, 
-				verb = 'Replied your comment', nf_type='Replied your comment')
-			return redirect(request.META.get('HTTP_REFERER'))
-	else:
-		form = ReplyForm()
-	return render(request, 'replycomment.html', {'form':form, 'comment':comment, 'all_replies':all_replies})
+class EditComment(LoginRequiredMixin, SuccessMessageMixin, DeleteCommentURLMixin, UpdateView, ):
+	template_name='commentupdate.html'
+	model= Comment
+	form_class=CommentForm
+	success_url=reverse_lazy("home")
+	success_message='Your comment Successfully Updated'
 
 
 
-class DeleteReplyView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
+class DeleteReplyView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, ADDReplySuccessURLMixin, DeleteView):
 	model = Replies
 	template_name = 'replydelete.html'
 	context_object_name = 'replies'
 	success_url=reverse_lazy("home")
 
-	def get_success_url(self):
-		return reverse_lazy('addreply', kwargs={'pk':self.object.comment.id})
 
 	def test_func(self):
 		replies = self.get_object()
@@ -217,14 +220,12 @@ class DeleteReplyView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMix
 			return False
 
 
-class EditReplyView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class EditReplyView(LoginRequiredMixin, UserPassesTestMixin, ADDReplySuccessURLMixin, UpdateView):
 	model = Replies
 	form_class = ReplyForm
 	template_name = "editreply.html"
 	context_object_name='replies'
 	
-	def get_success_url(self):
-		return reverse_lazy('addreply', kwargs={'pk':self.object.comment.id})
 
 	def test_func(self):
 		replies = self.get_object()
@@ -234,25 +235,47 @@ class EditReplyView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 			return False
 
 
-def AboutView(request):
-	form = MessageForm()
-	return render(request, 'about.html',{'form':form})
 
+class AboutView(LoginRequiredMixin, AboutViewMixin):
+	pass
 
-@login_required
-def AddMessage(request):
-	if request.method == 'POST':
-		form = MessageForm(request.POST)
+		
+class AddMessage(LoginRequiredMixin, AboutViewMixin, View):
+
+	def post(self, request):
+		form=self.form_class(request.POST)
 		if form.is_valid():
 			Msg=form.save(commit = False)
 			Msg.message_user = request.user
 			Msg.save()
 			messages.success(request, f'ThankYou four Feedback')
 			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-	else:
-		form = MessageForm()
-	return render(request, 'about.html', {"form":form, "product":product})
-    
+		return render(request, self.template_name, context)
 
 
- 
+
+class AddReply(LoginRequiredMixin, AddMixin, View, ):
+	template_name='replycomment.html'
+	model=Comment
+	context_object_name='comment'
+	form_class=ReplyForm
+
+	def get(self, request, *args, **kwargs):
+		form=self.form_class
+		comment = self.get_object()
+		context={'form':form, 'comment':comment}
+		return render(request, self.template_name, context)
+
+
+	def post(self, request, *args, **kwargs):
+		form = self.form_class(request.POST)
+		if form.is_valid():
+			data = form.save(commit = False)
+			data.comment = self.get_object()
+			data.replied_user = request.user
+			data.save()
+			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+		context={'form':form}
+		return render(request, self.template_name, context)
+
+

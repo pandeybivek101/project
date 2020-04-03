@@ -4,14 +4,14 @@
 <div>
 	<h2>Comment:{{comment.comment}}</h2>
 </div>
-<h3>Replies({{all_replies.count}})</h3>
+<h3>Replies({{comment.replies_set.count}})</h3>
 <div class="col-md-4">
 	<form method="POST" action="{% url 'addreply' comment.pk %}">
 		{% csrf_token %}
 		{{form|crispy}}
 		<button class="btn btn-primary">Reply</button>
 	</form>
-	{% for item in all_replies%}
+	{% for item in comment.replies_set.all%}
 	    <p><img class="rounded-circle" src="{{item.replied_user.profile.image.url}}" height="50" width="50">
         {% if item.replied_user == user %}
          <a href="{% url 'profile' %}">Me</a> 
@@ -20,7 +20,7 @@
         {% endif %}
 	    <b>{{item.reply}}</b>
 		{% if item.replied_user == user %}
-		<a href="{% url 'deletereply' item.pk %}">Delete</a>
+		<a href="">Delete</a>
 		<a href="{% url 'editreply' item.pk %}">Edit</a>
 		{% endif %}
 		<p>{{ item.replied_date|date:"M d, Y"}}</p>

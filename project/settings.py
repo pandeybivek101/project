@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'account',
     'product',
     'crispy_forms',
-    'notify',
+    #'notify',
 ]
 
 
@@ -67,6 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'product.context_processors.CatagoryList',
             ],
         },
     },

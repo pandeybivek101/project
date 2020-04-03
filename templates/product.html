@@ -14,8 +14,8 @@
         <form id="upvote1" method="POST" action="{% url 'upvote' pro.id %}">
           {% csrf_token %}
           <input type="hidden"/>
-          {% if liked %}
-          <button class="btn btn-info">{{pro.total_like}}unLike</button>
+          {% if user in pro.likes.all %}
+          <p>{{pro.total_like}}like<button class="btn btn-info btn-danger">Unlike</button></p>
           {% else %}
           <button class="btn btn-info">{{pro.total_like}}Like</button>
           {% endif %}

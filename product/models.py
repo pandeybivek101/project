@@ -33,6 +33,7 @@ class Product(models.Model):
 	def total_like(self):
 		return self.likes.count()
 
+
 class Comment(models.Model):
 	comment = models.CharField(max_length=300)
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -46,6 +47,9 @@ class Replies(models.Model):
 	comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
 	replied_user = models.ForeignKey(User, on_delete=models.CASCADE)
 	replied_date = models.DateTimeField(auto_now_add = True)
+
+	class Meta:
+		ordering = ["-replied_date"]
 
 	def __str__(self):
 		return "{} {}".format(self.comment.id, self.replied_user)

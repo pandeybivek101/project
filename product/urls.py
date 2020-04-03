@@ -20,20 +20,19 @@ from product.views import *
 
 urlpatterns =[
     path('addproduct/', AddProductItem.as_view(), name='addproduct'),
-    path('search/', views.Search, name='search'),
-    path('<int:pk>', views.DetailView, name='detailview'),
+    path('search/', Search.as_view(), name='search'),
+    path('<int:pk>', DetailView.as_view(), name='detailview'),
     path('<int:pk>/update-product', UpdateProductview.as_view(), name='update_product'),
     path('<int:pk>/delete-product', DeleteProductView.as_view(), name='delete_product'),
     path('user/<str:username>', UserProductlistView.as_view(), name='userproduct'),
     path('catagory/<str:catagory>', productcatagorylist.as_view(), name='product-catagory'),  
-    path('<int:pk>/upvote', views.LikeProduct, name='upvote'),
+    path('<int:pk>/upvote', LikeProduct.as_view(), name='upvote'),
     path('deletecomment/<int:pk>', DeleteComment.as_view(), name = 'deletecomment'),
-    path('editcomment/<int:pk>', views.EditComment, name = 'editcomment'),
-    path('reply/<int:pk>', views.AddReply, name='addreply'),
+    path('editcomment/<int:pk>', EditComment.as_view(), name = 'editcomment'),
+    path('reply/<int:pk>', AddReply.as_view(), name='addreply'),
     path('replyedit/<int:pk>', EditReplyView.as_view(), name = 'editreply'),
-    path('replydelete/<int:pk>', DeleteReplyView.as_view(), name = 'deletereply'),
-    path('addcomment/<int:pk>', views.AddComment, name = 'addcomment'),
+    path('addcomment/<int:pk>', AddComment.as_view(), name = 'addcomment'),
     path('message/', views.AddMessage, name = 'message'),
-    path('about/', views.AboutView, name='about'),
+    path('about/', views.AboutView.as_view(), name='about'),
 
 ]
