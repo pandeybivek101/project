@@ -29,4 +29,9 @@ urlpatterns = [
     path('detailcomment/<int:pk>', DetailComment.as_view(), name = 'api_detailcomment'),
     path('editcomment/<int:pk>', DetailComment.as_view(), name = 'api_editcomment'),
     path('deletecomment/<int:pk>', DetailComment.as_view(), name = 'api_deletecomment'),
+    path('reply/<int:pk>', AddReply.as_view(), name='api_addreply'),
+    path('replyedit/<int:pk>', DetailReply.as_view(), name = 'api_editreply'),
+    path('replydelete/<int:pk>', DetailReply.as_view(), name = 'api_deletereply'),
+    path('replydetail/<int:pk>', DetailReply.as_view(), name = 'api_detailreply'),
+
 ]

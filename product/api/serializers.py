@@ -58,3 +58,12 @@ class AddCommentSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Comment
 		fields = ['comment']
+
+
+
+class AddReplySerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Replies
+		fields = ['reply']
+	
+
