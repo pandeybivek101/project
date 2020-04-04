@@ -69,20 +69,6 @@ class LikeProduct(AddMixin, View):
 		return render(request , 'home.html' ,{'product':product})
 
 
-'''@login_required
-def LikeProduct(request,pk):
-	product=get_object_or_404(Product,pk=pk)
-	user=request.user
-	if request.method=='POST':
-		if product.likes.filter(id=user.id).exists():
-			product.likes.remove(user)
-			liked = False
-		else:
-			product.likes.add(user)
-			liked = True
-		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   
-	return render(request , 'home.html' ,{'product':product})'''
-
 
 class Search(View):
 	template_name='search.html'
@@ -205,35 +191,19 @@ class EditComment(LoginRequiredMixin, SuccessMessageMixin, DeleteCommentURLMixin
 
 
 
-class DeleteReplyView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, ADDReplySuccessURLMixin, DeleteView):
+class DeleteReplyView(LoginRequiredMixin, SuccessMessageMixin, ADDReplySuccessURLMixin, ReplyAutorityMixin, DeleteView):
 	model = Replies
 	template_name = 'replydelete.html'
 	context_object_name = 'replies'
 	success_url=reverse_lazy("home")
 
 
-	def test_func(self):
-		replies = self.get_object()
-		if replies.replied_user == self.request.user:
-			return True
-		else:
-			return False
-
-
-class EditReplyView(LoginRequiredMixin, UserPassesTestMixin, ADDReplySuccessURLMixin, UpdateView):
+class EditReplyView(LoginRequiredMixin, ADDReplySuccessURLMixin, ReplyAutorityMixin, UpdateView):
 	model = Replies
 	form_class = ReplyForm
 	template_name = "editreply.html"
 	context_object_name='replies'
 	
-
-	def test_func(self):
-		replies = self.get_object()
-		if replies.replied_user == self.request.user:
-			return True
-		else:
-			return False
-
 
 
 class AboutView(LoginRequiredMixin, AboutViewMixin):

@@ -15,14 +15,7 @@ Including another URLconf
 """
 
 from django.urls import path, include
-from . import views
-from account.views import *
-from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('signup/', SignUp.as_view(), name='signup'),
-    path('logout/', views.Logout, name='logout'),
-    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
-    path('profile/', Profile.as_view(), name='profile'),
-    path('userprofile/<int:pk>', UserProfile.as_view(), name='userprofile'),
+    
 ]

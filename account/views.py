@@ -9,19 +9,26 @@ from django.contrib.auth.decorators import login_required
 from .models import *
 from django.views.generic import *
 from product.models import Product
+from django.views import View
+from product.mixins import AddMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
+class SignUp(View):
+    form_class=UserRegistrationForm
+    template_name='signup.html'
 
-def SignUp(request):
-    if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
+    def get(self, request):
+        form = self.form_class()
+        return render(request, self.template_name, {"form":form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, f'registration Success.You can login Now.')
             return redirect('login')
-    else:
-        form = UserRegistrationForm()
-    return render(request, 'signup.html', {"form":form})
+        return render(request, self.template_name, {"form":form})
 
 
 @login_required
@@ -30,9 +37,16 @@ def Logout(request):
     return redirect("home")
 
 
-@login_required
-def profile(request):
-    if request.method == 'POST':
+class Profile(View):
+    template_name='profile.html'
+
+    def get(self, request):
+        user_form = UserUpdateForm(instance=request.user)
+        profile_form = ProfileUpdateForm(instance=request.user.profile)
+        context={'user_form':user_form, 'profile_form':profile_form}
+        return render(request, self.template_name, context)
+
+    def post(self, request):
         user_form = UserUpdateForm(request.POST, instance=request.user)
         profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
         if user_form.is_valid() and profile_form.is_valid():
@@ -40,15 +54,18 @@ def profile(request):
             profile_form.save()
             messages.success(request, f'Your account has been updated!')
             return redirect('profile')
-    else:
-        user_form = UserUpdateForm(instance=request.user)
-        profile_form = ProfileUpdateForm(instance=request.user.profile)
-    return render(request, 'profile.html', {'user_form': user_form, 'profile_form': profile_form })
+        context={'user_form':user_form, 'profile_form':profile_form}
+        return render(request, self.template_name, context)
 
 
-def UserProfile(request, pk):
-    product = User.objects.get(pk=pk)
-    return render(request, 'userprofile.html', {"product":product})
+class UserProfile(LoginRequiredMixin, AddMixin, View):
+    template_name='userprofile.html'
+    model=User
+
+    def get(self, request, pk):
+        product = self.get_object()
+        return render(request, self.template_name, {"product":product})
+
 
 def usernotification(request):
     return render(request, 'newnotification.html')

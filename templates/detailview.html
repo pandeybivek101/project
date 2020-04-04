@@ -6,7 +6,11 @@
   <div class="container" align="text-center">
     <div class="row">
       <div class="col-md-4">
+    {% if product.image %}
         <img class="card-img-top" src="{{product.image.url}}" height="500" width="400">
+    {% else %}
+    <p>No Image</p>
+    {% endif %}
         {% if product.user == user %}
         <a href="{% url 'update_product' product.id %}"><button class="btn btn-warning">Edit</button></a>
         <a href="{% url 'delete_product' product.id %}"><button class="btn btn-danger">Delete</button></a>

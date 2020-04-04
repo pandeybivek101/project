@@ -3,6 +3,7 @@ from .forms import *
 from django.shortcuts import render, get_object_or_404
 from .models import *
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 class AboutViewMixin(View):
 	form_class=MessageForm
@@ -40,6 +41,19 @@ class FormValidMixin:
 	def form_valid(self, form):
 		form.instance.user = self.request.user
 		return super().form_valid(form)
+
+
+class ReplyAutorityMixin(UserPassesTestMixin):
+
+	def test_func(self):
+		replies = self.get_object()
+		if replies.replied_user == self.request.user:
+			return True
+		else:
+			return False
+
+
+		
 
 
 

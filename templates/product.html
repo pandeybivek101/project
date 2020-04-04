@@ -8,7 +8,16 @@
     {% endif %}
   </p>
   <div class="card mb-4 shadow-sm">
-    <a href="{%url 'detailview' pro.pk %}"><img class="card-img-top" src="{{pro.image.url}}" height="300" width="300"></a>
+    
+    <a href="{%url 'detailview' pro.pk %}">
+      {% if pro.image %}<img class="card-img-top" src="{{pro.image.url}}" height="300" width="300">
+      {% else %}
+      <p>No Image</p>
+      {% endif %}
+
+    </a>
+    
+
     <div class="card-body">
       <div class="card-text">
         <form id="upvote1" method="POST" action="{% url 'upvote' pro.id %}">
