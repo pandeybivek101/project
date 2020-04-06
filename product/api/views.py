@@ -19,6 +19,7 @@ class GetObject:
 		return Response(serializer.data)
 
 
+
 class MainAPIView(APIView):
 	serializer_class=''
 	model=None
@@ -46,6 +47,7 @@ class MainAPIView(APIView):
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+
 class MainCreateGetAPIView(APIView):
 	serializer_class=''
 
@@ -58,11 +60,6 @@ class MainCreateGetAPIView(APIView):
 class AddProductItem(MainCreateGetAPIView, APIView):
 	serializer_class=AddProductSerializer
 
-	'''def get(self, request):
-		serializer = self.serializer_class()
-		return Response(serializer.data)'''
-
-
 	def post(self, request):
 		serializer = self.serializer_class(data=request.data)
 		if serializer.is_valid():
@@ -70,6 +67,7 @@ class AddProductItem(MainCreateGetAPIView, APIView):
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		else:
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class ListProduct(APIView):
@@ -82,6 +80,7 @@ class ListProduct(APIView):
 		record=self.get_queryset()
 		serializer=ProductListSerializer(record, many=True)
 		return Response(serializer.data)
+
 
 
 class DetailView(GetObject, APIView):
@@ -100,6 +99,7 @@ class DetailView(GetObject, APIView):
 		product=self.get_object()
 		product.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 
 class UpdateProductview(GetObject, APIView):
@@ -150,11 +150,9 @@ class Search(ListAPIView):
 class AddComment(GetObject, APIView):
 	serializer_class=AddCommentSerializer
 
-
 	def get(self, request, pk):
 		serializer = self.serializer_class()
 		return Response(serializer.data)
-
 
 	def post(self, request, pk):
 		product=self.get_object()
@@ -166,31 +164,11 @@ class AddComment(GetObject, APIView):
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+
 class DetailComment(MainAPIView):
 	serializer_class=AddCommentSerializer
 	model=Comment
 
-	'''def get_object(self, *args, **kwargs):
-		return Comment.objects.get(pk=self.kwargs.get('pk'))
-
-	def get(self, request, pk):
-		comment=self.get_object()
-		serializer=self.serializer_class(comment)
-		return Response(serializer.data)
-
-	def put(self, request, pk):
-		comment=self.get_object()
-		serializer = self.serializer_class(comment, data=request.data, partial=True)
-		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data)
-		else:
-			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-	def delete(self, request, pk):
-		comment=self.get_object()
-		comment.delete()
-		return Response(status=status.HTTP_204_NO_CONTENT)'''
 
 
 class AddReply(MainCreateGetAPIView, APIView):
@@ -198,9 +176,6 @@ class AddReply(MainCreateGetAPIView, APIView):
 	Model=Replies
 	field_name='comment'
 
-	'''def get(self, request, pk):
-		serializer = self.serializer_class()
-		return Response(serializer.data)'''
 
 	def post(self, request, pk):
 		comment=get_object_or_404(Comment, pk=self.kwargs['pk'])
@@ -212,32 +187,10 @@ class AddReply(MainCreateGetAPIView, APIView):
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+
 class DetailReply(MainAPIView):
 	serializer_class=AddReplySerializer
 	model=Replies
-
-	'''def get_object(self, *args, **kwargs):
-		return Replies.objects.get(pk=self.kwargs.get('pk'))
-
-	def get(self, request, pk):
-		replies=self.get_object()
-		serializer=self.serializer_class(replies)
-		return Response(serializer.data)
-
-
-	def put(self, request, pk):
-		replies=self.get_object()
-		serializer = self.serializer_class(replies, data=request.data, partial=True)
-		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data)
-		else:
-			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-	def delete(self, request, pk):
-		replies=self.get_object()
-		replies.delete()
-		return Response(status=status.HTTP_204_NO_CONTENT)'''
 
 
 
