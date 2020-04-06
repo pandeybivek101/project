@@ -6,59 +6,15 @@ from rest_framework.generics import *
 from rest_framework import generics
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+from rest_framework.permissions import IsAuthenticated
+from .mixins import *
 
 
-class GetObject:
-
-	def get_object(self, *args, **kwargs):
-		return Product.objects.get(pk=self.kwargs['pk'])
-
-	def get(self, request, pk):
-		product=self.get_object()
-		serializer=self.serializer_class(product)
-		return Response(serializer.data)
-
-
-
-class MainAPIView(APIView):
-	serializer_class=''
-	model=None
-
-	def get_object(self, *args, **kwargs):
-		return self.model.objects.get(pk=self.kwargs.get('pk'))
-
-	def get(self, request, pk):
-		content=self.get_object()
-		serializer=self.serializer_class(content)
-		return Response(serializer.data)
-
-	def put(self, request, pk):
-		instance=self.get_object()
-		serializer = self.serializer_class(instance, data=request.data, partial=True)
-		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data)
-		else:
-			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-	def delete(self, request, pk):
-		instance=self.get_object()
-		instance.delete()
-		return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-
-class MainCreateGetAPIView(APIView):
-	serializer_class=''
-
-	def get(self, request, *args, **kwargs):
-		serializer = self.serializer_class()
-		return Response(serializer.data)
-
-
-
-class AddProductItem(MainCreateGetAPIView, APIView):
+class AddProductItem(MainCreateGetAPIViewMixin, APIView):
 	serializer_class=AddProductSerializer
+	permission_classes = [IsAuthenticated]
 
 	def post(self, request):
 		serializer = self.serializer_class(data=request.data)
@@ -69,21 +25,17 @@ class AddProductItem(MainCreateGetAPIView, APIView):
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-class ListProduct(APIView):
-	serializer_class = AddProductSerializer
+class ListProduct(generics.ListAPIView):
+	serializer_class = ProductListSerializer
+	filter_backends = [DjangoFilterBackend]
+	filter_backends = [filters.SearchFilter]
+	search_fields = ['title', 'catagory__catagory']
 
 	def get_queryset(self):
 		return Product.objects.all()
 	
-	def get(self, request):
-		record=self.get_queryset()
-		serializer=ProductListSerializer(record, many=True)
-		return Response(serializer.data)
 
-
-
-class DetailView(GetObject, APIView):
+class DetailView(GetObjectMixin, APIView):
 	serializer_class=ProductDetailSerializer
 
 	def put(self, request, pk):
@@ -102,7 +54,7 @@ class DetailView(GetObject, APIView):
 
 
 
-class UpdateProductview(GetObject, APIView):
+'''class UpdateProductview(GetObjectMixin, APIView):
 	serializer_class=AddProductSerializer
 	queryset=Product.objects.all()
 
@@ -113,13 +65,14 @@ class UpdateProductview(GetObject, APIView):
 			serializer.save()
 			return Response(serializer.data)
 		else:
-			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)'''
 
 
 
-class LikeProduct(GetObject, RetrieveUpdateAPIView):
+class LikeProduct(GetObjectMixin, RetrieveUpdateAPIView):
 	serializer_class=UpvoteSerializer
 	queryset=Product.objects.all()
+	ermission_classes = [IsAuthenticated]
 
 	def perform_update(self, serializer):
 		user=self.request.user
@@ -132,23 +85,9 @@ class LikeProduct(GetObject, RetrieveUpdateAPIView):
 		return Response()
 
 
-class Search(ListAPIView):
-	serializer_class=AddProductSerializer
-
-	def get_queryset(self, request):
-		pass
-		'''query=request.GET.get('q')
-		if query:
-			result=self.model.objects.filter(Q(title__icontains = query) | Q(
-				catagory__catagory__icontains = query)).order_by('-pub_date')
-
-			return result
-		else:
-			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)'''
-
-
-class AddComment(GetObject, APIView):
+class AddComment(GetObjectMixin, APIView):
 	serializer_class=AddCommentSerializer
+	permission_classes = [IsAuthenticated]
 
 	def get(self, request, pk):
 		serializer = self.serializer_class()
@@ -165,16 +104,11 @@ class AddComment(GetObject, APIView):
 
 
 
-class DetailComment(MainAPIView):
-	serializer_class=AddCommentSerializer
-	model=Comment
-
-
-
-class AddReply(MainCreateGetAPIView, APIView):
+class AddReply(MainCreateGetAPIViewMixin, APIView):
 	serializer_class = AddReplySerializer
 	Model=Replies
 	field_name='comment'
+	permission_classes = [IsAuthenticated]
 
 
 	def post(self, request, pk):
@@ -188,9 +122,14 @@ class AddReply(MainCreateGetAPIView, APIView):
 
 
 
-class DetailReply(MainAPIView):
+class DetailReply(MainAPIViewMixin):
 	serializer_class=AddReplySerializer
 	model=Replies
+
+
+class DetailComment(MainAPIViewMixin):
+	serializer_class=AddCommentSerializer
+	model=Comment
 
 
 

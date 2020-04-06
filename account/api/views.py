@@ -4,8 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import *
-
-
+from django.contrib.auth import authenticate, login
+from rest_framework import status
 from rest_framework.generics import CreateAPIView
 
 class SignUp(CreateAPIView):
@@ -19,7 +19,14 @@ class LoginView(APIView):
 	def post(self, request, *args, **kwargs):
 		serializer=self.serializer_class(data=request.data)
 		if serializer.is_valid(raise_exception = True):
-			new_data=serializer.data
-			return Response(new_data, status = HTTP_200_OK)
-		return Response(serializer.errors, status = HTTP_400_OR_BAD_REQUEST)
+			username=serializer.validated_data['username']
+			password=serializer.validated_data['password']
+			user=authenticate(username=username, password=password)
+			token=Token.objects.get(user=user)
+			login(request, user)
+			return Response({"Message":"Login Success",
+				'username':username,
+				'Token':token.key,
+				})
+		return Response(serializer.errors)
 

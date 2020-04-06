@@ -3,12 +3,14 @@ from rest_framework import serializers
 from rest_framework.serializers import Serializer, ModelSerializer, CharField, ValidationError
 from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate
 
 
 
 class UserCreationSerializers(serializers.ModelSerializer):
+
 	confirm_password = CharField(label = 'Confirm Email')
+
 	class Meta:
 		model=User
 		fields=['username', 'email', 'password', 'confirm_password']
@@ -47,7 +49,10 @@ class UserCreationSerializers(serializers.ModelSerializer):
 		return validated_data
 
 
-class UserLoginSerializers(serializers.ModelSerializer):
+class UserLoginSerializers(serializers.Serializer):
+	username=serializers.CharField(label='username')
+	password=serializers.CharField(label='password')
+
 	class Meta:
 		model=User
 		fields=['username', 'password']
@@ -56,22 +61,23 @@ class UserLoginSerializers(serializers.ModelSerializer):
 		"password":{"write_only":True},
 		}
 
-	def validate(self, request, data):
+	def validate(self, data):
 		username=data['username']
 		password=data['password']
+		if not username and not password:
+			raise ValidationError('No Credentials were given')
 		user=User.objects.filter(username=username).first()
 		if user:
-			if user.check_password(password):
-				auth_data=authenticate(username=username, password=password)
-				login(request, auth_data)
-				user_token=Token.objects.get(user=user)
-				data['Token']=user_token
-				data['message']='Login SuccessFull'
+			checked_password=user.check_password(password)
+			if checked_password:
 				return data
 			else:
-				raise ValidationError('Incorrect Credentials matched')
+				raise ValidationError('Incorrect Credentials')
 		else:
-			raise ValidationError('Username doesnot exists')
+			raise ValidationError('No username exists with this credentials')
+
+				
+
 			
 
 
