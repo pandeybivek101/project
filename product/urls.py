@@ -34,5 +34,6 @@ urlpatterns =[
     path('addcomment/<int:pk>', AddComment.as_view(), name = 'addcomment'),
     path('message/', views.AddMessage, name = 'message'),
     path('about/', views.AboutView.as_view(), name='about'),
+    path('dialogs/<str:username>', views.ChatView, name='chat'),
 
 ]

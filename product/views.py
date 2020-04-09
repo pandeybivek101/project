@@ -6,7 +6,6 @@ from django.utils import timezone
 from django.core.paginator import Paginator
 from .forms import *
 from django.views.generic import *
-from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.views.generic import *
@@ -252,5 +251,11 @@ class AddReply(LoginRequiredMixin, AddMixin, View, ):
 			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 		context={'form':form}
 		return render(request, self.template_name, context)
+
+
+def ChatView(request, username):
+	return redirect('/dialogs/{}'.format(username))
+
+
 
 

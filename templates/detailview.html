@@ -15,6 +15,9 @@
         <a href="{% url 'update_product' product.id %}"><button class="btn btn-warning">Edit</button></a>
         <a href="{% url 'delete_product' product.id %}"><button class="btn btn-danger">Delete</button></a>
         {% endif %}
+        {% if product.user != user %}
+        <a href="{% url 'chat' product.user.username %}"><button class="btn btn-info">Chat with owner</button></a>
+        {% endif %}
         <p class="card-text" align="text-center">TITLE:{{product.title}}</p>
         <p>Buy through link <br>
          <a class="btn btn-primary" href="{{product.url}}">Buy</a>
@@ -26,7 +29,12 @@
       <form id="upvote1" method="POST" action="{% url 'upvote' product.id %}">
         {% csrf_token %}
         <input type="hidden"/>
-        <button class="btn btn-info">{{product.total_like}}Like</button>
+
+        {% if user in product.likes.all %}
+        <button style="border: none"><i class="fa fas fa-thumbs-up"></i></button>:{{product.total_like}}
+          {% else %}
+        <button class="fa fa fa-thumbs-o-up" style="border: none;"></button>:{{product.total_like}} 
+          {% endif %}
       </form> 
       <p class="card-text" align="text-center">BODY:{{product.body}}</p>
     </div>
