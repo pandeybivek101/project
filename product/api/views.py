@@ -38,7 +38,16 @@ class ListProduct(generics.ListAPIView):
 
 class DetailView(GetObjectMixin, APIView):
 	serializer_class=ProductDetailSerializer
-	permission_classes=[IsAuthenticated, IsProductOwner]
+	permission_classes=[IsProductOwner]
+
+	def get(self, request, pk):
+		user=self.request.user
+		product=self.get_object()
+		serializer=self.serializer_class(product)
+		if user.is_authenticated:
+			if not product.views.filter(id=user.id).exists():
+				product.views.add(user)
+		return Response(serializer.data)
 
 	def put(self, request, pk):
 		product=self.get_object()
@@ -53,21 +62,6 @@ class DetailView(GetObjectMixin, APIView):
 		product=self.get_object()
 		product.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-
-'''class UpdateProductview(GetObjectMixin, APIView):
-	serializer_class=AddProductSerializer
-	queryset=Product.objects.all()
-
-	def put(self, request, pk):
-		product=self.get_object()
-		serializer = self.serializer_class(product, data=request.data, partial=True)
-		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data)
-		else:
-			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)'''
 
 
 
