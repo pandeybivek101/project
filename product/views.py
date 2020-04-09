@@ -33,7 +33,7 @@ class AddProductItem(LoginRequiredMixin, FormValidMixin, CreateView):
 	success_url = reverse_lazy("home")
 
 
-class DetailView(DetailView):
+'''class ProductDetailView(DetailView):
 	model=Product
 	template_name='detailview.html'
 
@@ -47,7 +47,27 @@ class DetailView(DetailView):
 			'commentlist':commentlist,
 			'form':form
 			})
-		return context
+		return context'''
+
+class ProductDetailView(AddMixin, ):
+	template_name='detailview.html'
+	model=Product
+	context_object_name='product'
+	form_class=CommentForm
+
+	def get(self, request, *args, **kwargs):
+		user=request.user
+		product=self.get_object()
+		if not product.views.filter(id=user.id).exists():
+			product.views.add(user)
+		commentlist = product.comment_set.all().order_by('-commented_date')
+		form = self.form_class()
+		context={
+			'product':product,
+			'commentlist':commentlist,
+			'form':form
+			}
+		return render(request, self.template_name, context)
 
 
 class LikeProduct(AddMixin, View):

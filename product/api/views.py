@@ -10,6 +10,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated
 from .mixins import *
+from .permissions import *
 
 
 class AddProductItem(MainCreateGetAPIViewMixin, APIView):
@@ -37,6 +38,7 @@ class ListProduct(generics.ListAPIView):
 
 class DetailView(GetObjectMixin, APIView):
 	serializer_class=ProductDetailSerializer
+	permission_classes=[IsAuthenticated, IsProductOwner]
 
 	def put(self, request, pk):
 		product=self.get_object()
@@ -125,11 +127,13 @@ class AddReply(MainCreateGetAPIViewMixin, APIView):
 class DetailReply(MainAPIViewMixin):
 	serializer_class=AddReplySerializer
 	model=Replies
+	permission_classes = [IsAuthenticated, IsReplyOwner]
 
 
 class DetailComment(MainAPIViewMixin):
 	serializer_class=AddCommentSerializer
 	model=Comment
+	permission_classes = [IsAuthenticated, IsCommentOwner]
 
 
 

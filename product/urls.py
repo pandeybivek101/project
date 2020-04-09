@@ -21,7 +21,7 @@ from product.views import *
 urlpatterns =[
     path('addproduct/', AddProductItem.as_view(), name='addproduct'),
     path('search/', Search.as_view(), name='search'),
-    path('<int:pk>', DetailView.as_view(), name='detailview'),
+    path('<int:pk>', ProductDetailView.as_view(), name='detailview'),
     path('<int:pk>/update-product', UpdateProductview.as_view(), name='update_product'),
     path('<int:pk>/delete-product', DeleteProductView.as_view(), name='delete_product'),
     path('user/<str:username>', UserProductlistView.as_view(), name='userproduct'),

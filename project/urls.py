@@ -19,7 +19,6 @@ from django.conf.urls.static import static
 from django.conf import settings
 from product import views
 from product.views import HomeView
-
 urlpatterns = [
     #path('',views.HomeView, name='home'),
     path('',HomeView.as_view(), name='home'),

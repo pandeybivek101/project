@@ -1,10 +1,30 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from rest_framework.serializers import Serializer, ModelSerializer, CharField, ValidationError
+from rest_framework.serializers import Serializer, ModelSerializer, CharField, ValidationError, SerializerMethodField
 from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
+from django.shortcuts import get_object_or_404
+from account.models import *
 
+class UserProfileSerializers(serializers.ModelSerializer):
+
+	profile_pic=SerializerMethodField()
+
+	class Meta:
+		model=User
+		fields=['username', 'email', 'profile_pic']
+
+	def get_profile_pic(self, obj):
+		user_record={}
+		usr=get_object_or_404(Profile, user=obj)
+		return usr.image.url
+
+
+class UserProfilePicSerializers(serializers.ModelSerializer):
+	class Meta:
+		model=Profile
+		fields=['image']
 
 
 class UserCreationSerializers(serializers.ModelSerializer):

@@ -20,6 +20,7 @@ class Product(models.Model):
 	price = models.CharField(max_length=10)
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	likes=models.ManyToManyField(User,related_name="likes",blank=True)
+	views=models.ManyToManyField(User,related_name="views",blank=True)
 
 
 	def __str__(self):

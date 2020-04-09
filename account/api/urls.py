@@ -20,8 +20,8 @@ from account.api.views import *
 urlpatterns = [
 	
     path('signup/', SignUp.as_view(), name='api_signup'),
-    #path('logout/', views.Logout, name='logout'),
+    path('logout/', LogoutView.as_view(), name='api_logout'),
     path('login/', LoginView.as_view(), name='api_login'),
-    #path('profile/', Profile.as_view(), name='profile'),
+    path('profile/', Profile.as_view(), name='api_profile'),
     #path('userprofile/<int:pk>', UserProfile.as_view(), name='userprofile'),
 ]

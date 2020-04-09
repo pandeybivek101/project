@@ -1,8 +1,10 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
+from django.core.exceptions import PermissionDenied
 
-class IsOwner(BasePermission):
-	message = 'You donot have authority to perform this operation.'
-	my_safe_method = ['GET', 'PUT']
+
+class IsProductOwner(BasePermission):
+	message = 'Permission is restricted'
+	my_safe_method = ['GET',"PUT", "DELETE"]
 
 	def has_permission(self, request, view):
 		if request.method in self.my_safe_method:
@@ -10,6 +12,26 @@ class IsOwner(BasePermission):
 		return False
 	
 	def has_object_permission(self, request, view, obj):
-		if request.method in SAFE_METHODS:
+		if obj.user==request.user:
 			return True
-		return obj.author == request.user
+		else:
+			return False
+
+
+
+class IsCommentOwner(IsProductOwner):
+	pass
+
+
+class IsReplyOwner(IsProductOwner):
+	
+	def has_object_permission(self, request, view, obj):
+		if obj.replied_user==request.user:
+			return True
+		else:
+			return False
+
+
+
+
+	

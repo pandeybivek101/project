@@ -1,6 +1,8 @@
 from .serializers import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import status
+
 
 class GetObjectMixin:
 
@@ -24,6 +26,7 @@ class MainAPIViewMixin(APIView):
 		content=self.get_object()
 		serializer=self.serializer_class(content)
 		return Response(serializer.data)
+
 
 	def put(self, request, pk):
 		instance=self.get_object()
