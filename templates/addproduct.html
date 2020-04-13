@@ -6,12 +6,15 @@
 	<div class="col-md-3"></div>
 	<div class="col-md-5">
 		<h1>Add Product</h1>
-		<form name="" method="POST" action="{% url 'addproduct' %}" enctype="multipart/form-data">
+		<form id="form_1" method="POST" action="{% url 'addproduct' %}" enctype="multipart/form-data">
 			{% csrf_token %}
 			{{form|crispy}}
-			<input class="btn btn-primary" type="submit" value="Add">
+			<button class="btn btn-primary" type="submit">Add</button>
 		</form>
 	</div>
 	<div class="col-md-3"></div>
 </div>
 {% endblock %}
+
+{% block extra_js %} 
+{% endblock extra_js %}

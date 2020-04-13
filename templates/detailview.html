@@ -24,6 +24,7 @@
        </p>
        <p class="card-text" align="text-center">PUBLISH DATE:{{product.pub_date}}</p>
        <p class="card-text" align="text-center">UPLOADED BY:{{product.user.username}}</p>
+       <p class="card-text" align="text-center">Distance:{{distance}}Km</p>
      </div>
      <div class="col-md-4">
       <form id="upvote1" method="POST" action="{% url 'upvote' product.id %}">

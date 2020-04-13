@@ -7,6 +7,7 @@ from rest_framework.authtoken.models import Token
 
 class Profile(models.Model):
 	image = models.ImageField(default ='Screenshot_156.png', upload_to='static/')
+	contact = models.CharField(max_length=100, blank=True, null=True)
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 	def __str__(self):

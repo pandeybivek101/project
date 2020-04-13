@@ -13,7 +13,15 @@ class Catagory(models.Model):
 class Product(models.Model):
 	title=models.CharField(max_length=300)
 	pub_date=models.DateTimeField(auto_now_add = True)
-	image=models.ImageField(upload_to='static/', blank=True, null=True)
+	image=models.ImageField(upload_to='image/', blank=True, null=True)
+	image2=models.ImageField(upload_to='image/', blank=True, null=True)
+	image3=models.ImageField(upload_to='image/', blank=True, null=True)
+	image4=models.ImageField(upload_to='image/', blank=True, null=True)
+	image5=models.ImageField(upload_to='image/', blank=True, null=True)
+	image6=models.ImageField(upload_to='image/', blank=True, null=True)
+	bought_date=models.DateTimeField(null=True)
+	brand=models.CharField(max_length=300, blank=True, null=True)
+	model=models.CharField(max_length=300, blank=True, null=True)
 	body=models.TextField()
 	url=models.URLField()
 	catagory = models.ForeignKey(Catagory, on_delete=models.CASCADE)
@@ -21,6 +29,11 @@ class Product(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	likes=models.ManyToManyField(User,related_name="likes",blank=True)
 	views=models.ManyToManyField(User,related_name="views",blank=True)
+	sold=models.BooleanField(default=False)
+	pro_lat=models.FloatField(max_length=300, blank=True, null=True)
+	pro_lng=models.FloatField(max_length=300, blank=True, null=True)
+	show_contact=models.BooleanField(default=True)
+	show_location=models.BooleanField(default=True)
 
 
 	def __str__(self):

@@ -15,10 +15,19 @@ from django.db.models import Q
 from django.views import View
 from django.contrib.messages.views import SuccessMessageMixin
 from .mixins import *
-
-
+import geocoder
+from math import sin, cos, sqrt, atan2, radians
 
 # Create your views here.
+
+def getLocation():
+	g = geocoder.ip('me')
+	lat1=g.lat
+	lng2=g.lng
+	lst=[lat1, lng2]
+	return lst
+
+
 class HomeView(ListView):
 	template_name='home.html'
 	context_object_name='product'
@@ -26,10 +35,16 @@ class HomeView(ListView):
 	paginate_by=3
 
 		
-class AddProductItem(LoginRequiredMixin, FormValidMixin, CreateView):
+class AddProductItem(LoginRequiredMixin, CreateView):
 	form_class = AddProductForm
 	template_name = 'addproduct.html'
 	success_url = reverse_lazy("home")
+
+	def form_valid(self, form):
+		form.instance.user = self.request.user
+		form.instance.pro_lat=getLocation()[0]
+		form.instance.pro_lng=getLocation()[1]
+		return super().form_valid(form)
 
 
 class ProductDetailView(AddMixin, ):
@@ -38,19 +53,41 @@ class ProductDetailView(AddMixin, ):
 	context_object_name='product'
 	form_class=CommentForm
 
+	def compute_distance(self):
+		product=self.get_object()
+		R = 6373.0
+		if product.pro_lat and product.pro_lng:
+			lat1 = radians(abs(product.pro_lat))
+			lng1 = radians(abs(product.pro_lng))
+		else:
+			lat1=radians(abs(27.00332))
+			lng1=radians(abs(82.44231))
+		lat2 = radians(abs(getLocation()[0]))
+		lng2 = radians(abs(getLocation()[1]))
+		dlat = lat2-lat1
+		dlng = lng2-lng1
+		a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlng / 2)**2
+		c = 2 * atan2(sqrt(a), sqrt(1 - a))
+		distance = R * c
+		return int(distance)
+
+
 	def get(self, request, *args, **kwargs):
 		user=request.user
 		product=self.get_object()
 		if request.user.is_authenticated:
 			if not product.views.filter(id=user.id).exists():
 				product.views.add(request.user)
+		distance=self.compute_distance()
 		commentlist = product.comment_set.all().order_by('-commented_date')
 		form = self.form_class()
 		context={
+		    'distance':distance,
 			'product':product,
 			'commentlist':commentlist,
 			'form':form
 			}
+		print(context)
 		return render(request, self.template_name, context)
 
 
@@ -65,10 +102,8 @@ class LikeProduct(LoginRequiredMixin, AddMixin, View):
 		if request.method=='POST':
 			if product.likes.filter(id=user.id).exists():
 				product.likes.remove(user)
-				liked = False
 			else:
 				product.likes.add(user)
-				liked = True
 			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   
 		return render(request , 'home.html' ,{'product':product})
 
