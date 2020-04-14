@@ -22,13 +22,18 @@ from math import sin, cos, sqrt, atan2, radians
 
 def getLocation():
 	g = geocoder.ip('me')
-	lat1=g.lat
-	lng2=g.lng
-	lst=[lat1, lng2]
+	if g:
+		lat1=g.lat
+		lng1=g.lng
+	else:
+		lat1=24.2213
+		lng2=87.4444
+	lst=[lat1, lng1]
 	return lst
 
 
 class HomeView(ListView):
+	#template_name='product/home.html'
 	template_name='home.html'
 	context_object_name='product'
 	model=Product
@@ -48,7 +53,8 @@ class AddProductItem(LoginRequiredMixin, CreateView):
 
 
 class ProductDetailView(AddMixin, ):
-	template_name='detailview.html'
+	#template_name='detailview.html'
+	template_name='product/product_detail.html'
 	model=Product
 	context_object_name='product'
 	form_class=CommentForm
@@ -57,13 +63,13 @@ class ProductDetailView(AddMixin, ):
 		product=self.get_object()
 		R = 6373.0
 		if product.pro_lat and product.pro_lng:
-			lat1 = radians(abs(product.pro_lat))
-			lng1 = radians(abs(product.pro_lng))
+			lat1 = radians(product.pro_lat)
+			lng1 = radians(product.pro_lng)
 		else:
 			lat1=radians(abs(27.00332))
 			lng1=radians(abs(82.44231))
-		lat2 = radians(abs(getLocation()[0]))
-		lng2 = radians(abs(getLocation()[1]))
+		lat2 = radians(getLocation()[0])
+		lng2 = radians(getLocation()[1])
 		dlat = lat2-lat1
 		dlng = lng2-lng1
 		a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlng / 2)**2
@@ -87,7 +93,6 @@ class ProductDetailView(AddMixin, ):
 			'commentlist':commentlist,
 			'form':form
 			}
-		print(context)
 		return render(request, self.template_name, context)
 
 

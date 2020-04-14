@@ -1,0 +1,161 @@
+{% extends 'product/base.html'%}
+{% load static %}
+
+{%block content%}
+<!-- slider Area Start-->
+<div class="slider-area ">
+  <!-- Mobile Menu -->
+  <div class="single-slider slider-height2 d-flex align-items-center" data-background="{% static 'assets/img/hero/category.jpg' %}">
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-12">
+          <div class="hero-cap text-center">
+            <h3>{{distance}} Km Away From Current Location</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- slider Area End-->
+
+<!--================Single Product Area =================-->
+<div class="product_image_area">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 posts-list">
+        <div class="product_img_slide owl-carousel">
+          <div class="single_product_img">
+            <img src="{{product.image.url}}" alt="#" class="img-fluid" style="height: 500px;">
+          </div>
+          {% if product.image2 %}
+          <div class="single_product_img">
+            <img src="%static 'assets/img/product/single_product.png' %}" alt="#" class="img-fluid">
+          </div>
+          {% endif %}
+          {% if product.image3 %}
+          <div class="single_product_img">
+            <img src="%static 'assets/img/product/single_product.png' %}" alt="#" class="img-fluid">
+          </div>
+          {% endif %}
+          {% if product.image4 %}
+          <div class="single_product_img">
+            <img src="%static 'assets/img/product/single_product.png' %}" alt="#" class="img-fluid">
+          </div>
+          {% endif %}
+          {% if product.image5 %}
+          <div class="single_product_img">
+            <img src="%static 'assets/img/product/single_product.png' %}" alt="#" class="img-fluid">
+          </div>
+          {% endif %}
+          {% if product.image6 %}
+          <div class="single_product_img">
+            <img src="%static 'assets/img/product/single_product.png' %}" alt="#" class="img-fluid">
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="blog_right_sidebar">
+          <aside class="single_sidebar_widget post_category_widget">
+           <h4 class="widget_title">Additional Details</h4>
+           <ul class="list cat-list">
+            <li>
+             <div class="d-flex">
+              <p>Brand:</p>
+              <p>{{product.brand}}</p>
+            </div>
+          </li>
+          <li>
+           <div class="d-flex">
+            <p>Model:</p>
+            <p>{{product.model}}</p>
+          </div>
+        </li>
+        <li>
+         <div class="d-flex">
+          <p>Proposed Price:</p>
+          <p>{{product.price}}</p>
+        </div>
+      </li>
+      <li>
+       <div class="d-flex">
+        <p>Posted On: </p>
+        <p>{{product.pub_date}}</p>
+      </div>
+    </li>
+    <li>
+     <div class="d-flex">
+      <p>Bought Date: </p>
+      <p>{{product.bought_date}}</p>
+    </div>
+  </li>
+</ul>
+</aside>
+</div>
+</div>
+
+<div class="col-lg-8">
+  <div class="single_product_text text-center">
+    <h3>{{product.title}}</h3>
+    <p>
+      {{product.body}}
+    </p>
+    <div class="card_area">
+      {% if product.user != user %}
+      <div class="add_to_cart">
+        <a href="{% url 'chat' product.user.username %}" class="btn_3">Contact with owner</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="col-lg-3 offset-lg-1">
+  <div class="media contact-info">
+    <span class="contact-info__icon"><i class="ti-home"></i></span>
+    <div class="media-body">
+      <h3>Buttonwood, California.</h3>
+      <p>Rosemead, CA 91770</p>
+    </div>
+  </div>
+  <div class="media contact-info">
+    <span class="contact-info__icon"><i class="ti-tablet"></i></span>
+    <div class="media-body">
+      <h3>+1 253 565 2365</h3>
+      <p>Mon to Fri 9am to 6pm</p>
+    </div>
+  </div>
+  <div class="media contact-info">
+    <span class="contact-info__icon"><i class="ti-email"></i></span>
+    <div class="media-body">
+      <h3>{{product.user.email}}</h3>
+      <p>Send product owner an email!</p>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+</div>
+<!--================End Single Product Area =================-->
+<!-- subscribe part here -->
+<section class="subscribe_part section_padding">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="subscribe_part_content">
+          <h2>Get promotions & updates!</h2>
+          <p>Seamlessly empower fully researched growth strategies and interoperable internal or “organic” sources credibly innovate granular internal .</p>
+          <div class="subscribe_form">
+            <input type="email" placeholder="Enter your mail">
+            <a href="#" class="btn_1">Subscribe</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- subscribe part end -->
+
+{% endblock content %}
