@@ -102,17 +102,34 @@
       {{product.body}}
     </p>
     <div class="card_area">
-      {% if product.user != user %}
-      <div class="add_to_cart">
-        <a href="{% url 'chat' product.user.username %}" class="btn_3">Contact with owner</a>
+      <div class="product_count_area">
+        <form id="upvote1" method="POST" action="{% url 'upvote' product.id %}">
+          {% csrf_token %}
+          <input type="hidden"/>
+          {% if user in product.likes.all %}
+          <button class="fa fas fa-heart fa-4x" style="border: none; color: #828bb2; background: transparent;"></button>
+          {% else %}
+          <button class="far fa-heart fa-4x" style="border: none; color: #828bb2; background: transparent;"></button>
+          {% endif %}
+        </form>
+        <p>{{product.total_like}}</p>
+        <i class="fa fas fa-eye fa-4x" style="color: #828bb2; margin-left:50px; "></i>
+        <p>{{product.views.count}}</p>
       </div>
-      {% endif %}
+      <div>
+        {% if product.user != user %}
+        <div class="add_to_cart">
+          <a href="{% url 'chat' product.user.username %}" class="btn_3">Contact with owner</a>
+        </div>
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>
 
-<div class="col-lg-3 offset-lg-1">
-  <div class="media contact-info">
+<div class="col-lg-4">
+  <h4 class="widget_title">Owner Details</h4>
+  <div class="media contact-info mt-5">
     <span class="contact-info__icon"><i class="ti-home"></i></span>
     <div class="media-body">
       <h3>Buttonwood, California.</h3>
@@ -133,29 +150,71 @@
       <p>Send product owner an email!</p>
     </div>
   </div>
+  <div class="media contact-info">
+    <div class="media-body map" id="map">
+    </div>
+  </div>
 </div>
-
 </div>
 </div>
 </div>
 <!--================End Single Product Area =================-->
 <!-- subscribe part here -->
-<section class="subscribe_part section_padding">
+<!-- <section>
   <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <div class="subscribe_part_content">
-          <h2>Get promotions & updates!</h2>
-          <p>Seamlessly empower fully researched growth strategies and interoperable internal or “organic” sources credibly innovate granular internal .</p>
-          <div class="subscribe_form">
-            <input type="email" placeholder="Enter your mail">
-            <a href="#" class="btn_1">Subscribe</a>
-          </div>
-        </div>
+    <div class="row">
+      <div class='col-lg-8'>Similar Product</div>
+      <div class='col-lg-4'>
+        <h3>Posted From</h3>
+        
       </div>
     </div>
   </div>
-</section>
+</section>-->
 <!-- subscribe part end -->
 
 {% endblock content %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/build/ol.js"></script>
+
+<script type="text/javascript">
+  var map = new ol.Map({
+    target: 'map',
+    layers: [
+    new ol.layer.Tile({
+      source: new ol.source.OSM()
+    })
+    ],
+    view: new ol.View({
+      center: ol.proj.fromLonLat([83.9856, 28.2096]),
+      zoom: 16,
+
+    })
+  });
+
+  var layer = new ol.layer.Vector({
+   source: new ol.source.Vector({
+     features: [
+     new ol.Feature({
+       geometry: new ol.geom.Point(ol.proj.fromLonLat([83.9856, 28.2096]))
+     })
+     ]
+   })
+ });
+  map.addLayer(layer);
+</script>
+
+{% endblock js %}
+
+
+{% block css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/css/ol.css" type="text/css">
+<style>
+  .map {
+    height: 400px;
+    width: 100%;
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/build/ol.js"></script>
+{% endblock css%}

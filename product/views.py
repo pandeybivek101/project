@@ -27,7 +27,7 @@ def getLocation():
 		lng1=g.lng
 	else:
 		lat1=24.2213
-		lng2=87.4444
+		lng1=87.4444
 	lst=[lat1, lng1]
 	return lst
 
