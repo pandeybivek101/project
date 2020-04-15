@@ -1,0 +1,78 @@
+{% extends 'product/base.html'%}
+{% load static %}
+{%block content%}
+<div class="single-slider slider-height2 d-flex align-items-center" data-background="{% static 'assets/img/hero/category.jpg' %}" style="background-image: url(&quot;assets/img/hero/category.jpg&quot;);">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="hero-cap text-center">
+                      <h2>
+                      {% if request.user != product.first.user %}
+                        {{product.first.user.username}}'s Aids
+                      {% else %}
+                      My Aids
+                    {% endif %}
+                    </h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<section class="cart_area section_padding">
+    <div class="container">
+      <div class="cart_inner">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Product</th>
+                <th scope="col">Price</th>
+                <th scope="col">Posted Date</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for pro in product%}
+              <tr>
+                <td>
+                  <div class="media">
+                    <div class="d-flex">
+                      {% if pro.image %}
+                      <img src="{{pro.image.url}}" alt="">
+                      {% else %}
+                      <p>N/A</p>
+                      {% endif %}
+                      
+                    </div>
+                    <div class="media-body">
+                      <p>{{pro.title}}</p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <h5>{{pro.price}}</h5>
+                </td>
+                <td>
+                  <div class="product_count">
+                    <h5>{{pro.pub_date}}</h5>
+                  </div>
+                </td>
+                <td>
+                  {% if request.user == pro.user %}
+                  {% if pro.sold == True %}
+                  <h5>sold</h5>
+                  {% endif %}
+                  <h5>unsold</h5>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          
+        </div>
+      </div>
+  </div></section>
+
+{% endblock content %}

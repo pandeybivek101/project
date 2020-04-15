@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_filters',
     'django_private_chat',
+    'corsheaders',
 
 ]
 
@@ -56,6 +57,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -157,4 +160,7 @@ REST_FRAMEWORK = {
 CHAT_WS_SERVER_HOST = 'localhost'
 CHAT_WS_SERVER_PORT = 5002
 CHAT_WS_SERVER_PROTOCOL = 'ws'
+
+
+CORS_ORIGIN_ALLOW_ALL=True
 

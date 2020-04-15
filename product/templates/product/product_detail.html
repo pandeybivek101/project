@@ -179,6 +179,8 @@
 <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/build/ol.js"></script>
 
 <script type="text/javascript">
+  var latitide={{product.pro_lat}}
+  var longitude={{product.pro_lng}}
   var map = new ol.Map({
     target: 'map',
     layers: [
@@ -187,7 +189,7 @@
     })
     ],
     view: new ol.View({
-      center: ol.proj.fromLonLat([83.9856, 28.2096]),
+      center: ol.proj.fromLonLat([longitude, latitide]),
       zoom: 16,
 
     })
@@ -197,7 +199,7 @@
    source: new ol.source.Vector({
      features: [
      new ol.Feature({
-       geometry: new ol.geom.Point(ol.proj.fromLonLat([83.9856, 28.2096]))
+       geometry: new ol.geom.Point(ol.proj.fromLonLat([longitude, latitide]))
      })
      ]
    })

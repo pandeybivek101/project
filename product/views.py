@@ -33,11 +33,15 @@ def getLocation():
 
 
 class HomeView(ListView):
-	#template_name='product/home.html'
-	template_name='home.html'
+	template_name='product/home.html'
+	#template_name='home.html'
 	context_object_name='product'
 	model=Product
 	paginate_by=3
+
+	def get_queryset(self):
+		return Product.objects.filter(sold=False).order_by('-pub_date')
+
 
 		
 class AddProductItem(LoginRequiredMixin, CreateView):
@@ -63,13 +67,13 @@ class ProductDetailView(AddMixin, ):
 		product=self.get_object()
 		R = 6373.0
 		if product.pro_lat and product.pro_lng:
-			lat1 = radians(product.pro_lat)
-			lng1 = radians(product.pro_lng)
+			lat1 = radians(abs(product.pro_lat))
+			lng1 = radians((product.pro_lng))
 		else:
 			lat1=radians(abs(27.00332))
 			lng1=radians(abs(82.44231))
-		lat2 = radians(getLocation()[0])
-		lng2 = radians(getLocation()[1])
+		lat2 = radians(abs(getLocation()[0]))
+		lng2 = radians(abs(getLocation()[1]))
 		dlat = lat2-lat1
 		dlng = lng2-lng1
 		a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlng / 2)**2
@@ -165,7 +169,7 @@ class DeleteProductView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageM
 
 class UserProductlistView(ListView):
 	model = Product
-	template_name = 'userproduct.html'
+	template_name = 'product/userproduct.html'
 	context_object_name = 'product'
 	paginate_by = 3
 
