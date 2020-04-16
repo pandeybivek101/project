@@ -1,0 +1,87 @@
+{% extends 'product/base.html'%}
+{% load crispy_forms_tags %}
+{% load static %}
+{%block content%}
+<!-- slider Area Start-->
+<div class="slider-area ">
+	<!-- Mobile Menu -->
+	<div class="single-slider slider-height2 d-flex align-items-center" data-background="{% static 'assets/img/hero/category.jpg' %}">
+		<div class="container">
+			<div class="row">
+				<div class="col-xl-12">
+					<div class="hero-cap text-center">
+						<h3>Post Your Aids</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- slider Area End-->
+<section class="login_part section_padding ">
+	<div class="container">
+		<div class="col-lg-8 col-md-8">
+			<h3>Post Here</h3>
+			<form method="POST" action="{% url 'addproduct' %}" enctype="multipart/form-data">
+				{% csrf_token %}
+				<div class="mt-10">
+					{{form.title}}
+				</div>
+				<div class="mt-10">
+					{{form.body}}
+				</div>
+				<div class="mt-10">
+					{{form.brand}}
+				</div>
+				<div class="mt-10">
+					{{form.model}}
+				</div>
+				<div class="mt-10">
+					{{form.price}}
+				</div>
+				<div class="mt-10">
+					{{form.bought_date}}
+				</div>
+				
+
+				<div class="input-group-icon mt-10">
+					<div class="icon" class='single-form'></div>
+					<div class="form-select" id="default-select" "="">
+						{{form.catagory}}
+					</div>
+				</div>
+				<div class="switch-wrap d-flex justify-content-between mt-10">
+					<p>Show your contact in Aid</p>
+					<div class="primary-switch">
+						{{form.show_contact}}
+						<label for="primary-switch"></label>
+					</div>
+				</div>
+				<div class="switch-wrap d-flex justify-content-between">
+					<p>Show your Location in Aid</p>
+					<div class="confirm-switch">
+						{{form.show_location}}
+						<label for="confirm-switch"></label>
+					</div>
+				</div>
+				<div class="mt-10">
+					{{form.image}}
+					{{form.image2}}
+				</div>
+				<div class="mt-10">
+					{{form.image3}}
+					{{form.image4}}
+				</div>
+				<div class="mt-10">
+					{{form.image5}}
+					{{form.image6}}
+				</div>
+				<div class="mt-10">
+					<button class="genric-btn success">Submit</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</section>
+
+{% endblock %}

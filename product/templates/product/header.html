@@ -29,11 +29,11 @@
                                 </div>
                                 <div class="header-info-right">
                                    <ul>                                          
-                                       <li><a href="login.html">My Account </a></li>
-                                       <li><a href="product_list.html">Wish List  </a></li>
-                                       <li><a href="cart.html">Shopping</a></li>
-                                       <li><a href="cart.html">Cart</a></li>
-                                       <li><a href="checkout.html">Checkout</a></li>
+                                       <li><a href="login.html">My Profile </a></li>
+                                       <li><a href="product_list.html">My Aids</a></li>
+                                       <li><a href="cart.html">Sell Product</a></li>
+                                       <li><a href="cart.html">Chat</a></li>
+                                       <li><a href="checkout.html">{{request.user.username}}</a></li>
                                    </ul>
                                 </div>
                             </div>
@@ -54,21 +54,9 @@
                                 <div class="main-menu f-right d-none d-lg-block">
                                     <nav>                                                
                                         <ul id="navigation">                                                                                                                                     
-                                            <li><a href="index.html">Home</a></li>
-                                            <li><a href="Catagori.html">Catagory</a></li>
-                                            <li class="hot"><a href="#">Latest</a>
-                                                <ul class="submenu">
-                                                    <li><a href="product_list.html"> Product list</a></li>
-                                                    <li><a href="single-product.html"> Product Details</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="blog.html">Blog</a>
-                                                <ul class="submenu">
-                                                    <li><a href="blog.html">Blog</a></li>
-                                                    <li><a href="single-blog.html">Blog Details</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="#">Pages</a>
+                                            <li><a href="{% url 'home' %}">Home</a></li>
+                                            <li><a href="index.html">About</a></li>
+                                            <li><a href="#">Catagory</a>
                                                 <ul class="submenu">
                                                     <li><a href="login.html">Login</a></li>
                                                     <li><a href="cart.html">Card</a></li>
@@ -104,7 +92,12 @@
                                             <a href="cart.html"><i class="fas fa-shopping-cart"></i></a>
                                         </div>
                                     </li>
-                                   <li class="d-none d-lg-block"> <a href="#" class="btn header-btn">Sign in</a></li>
+                                   <li class="d-none d-lg-block"> 
+                                    {%if user.is_authenticated %}
+                                        <a href="{% url 'logout'%}" class="btn header-btn">Sign out</a></li>
+                                    {% else %}
+                                    <a href="{% url 'login'%}" class="btn header-btn">Sign in</a></li>
+                                {% endif %}
                                 </ul>
                             </div>
                             <!-- Mobile Menu -->

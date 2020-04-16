@@ -18,3 +18,20 @@ class UserUpdateForm(forms.ModelForm):
 	class Meta:
 		model = User
 		fields = ['username', 'email']
+
+
+class LoginForm(forms.Form):
+	username=forms.CharField(widget=forms.TextInput(
+		attrs={'class':'form-control', 
+		'placeholder':'Username',
+		'id':'username',
+		'name':'name'
+		}), 
+	required=True, max_length=30)
+	password=forms.CharField(widget=forms.PasswordInput(
+		attrs={"class":"form-control",
+		 "placeholder":"Password",
+		 'id':'password',
+		 }), 
+	required=True)
+	

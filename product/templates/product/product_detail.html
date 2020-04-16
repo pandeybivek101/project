@@ -25,32 +25,34 @@
     <div class="row justify-content-center">
       <div class="col-lg-8 posts-list">
         <div class="product_img_slide owl-carousel">
+          {% if product.image %}
           <div class="single_product_img">
-            <img src="{{product.image.url}}" alt="#" class="img-fluid" style="height: 500px;">
+            <img src="{{product.image.url}}" alt="#" class="img-fluid">
           </div>
+          {% endif %}
           {% if product.image2 %}
           <div class="single_product_img">
-            <img src="%static 'assets/img/product/single_product.png' %}" alt="#" class="img-fluid">
+            <img src="{{product.image2.url}}" alt="#" class="img-fluid">
           </div>
           {% endif %}
           {% if product.image3 %}
           <div class="single_product_img">
-            <img src="%static 'assets/img/product/single_product.png' %}" alt="#" class="img-fluid">
+            <img src="{{product.image3.url}}" alt="#" class="img-fluid">
           </div>
           {% endif %}
           {% if product.image4 %}
           <div class="single_product_img">
-            <img src="%static 'assets/img/product/single_product.png' %}" alt="#" class="img-fluid">
+            <img src="{{product.image4.url}}" alt="#" class="img-fluid">
           </div>
           {% endif %}
           {% if product.image5 %}
           <div class="single_product_img">
-            <img src="%static 'assets/img/product/single_product.png' %}" alt="#" class="img-fluid">
+            <img src="{{product.image5.url}}" alt="#" class="img-fluid">
           </div>
           {% endif %}
           {% if product.image6 %}
           <div class="single_product_img">
-            <img src="%static 'assets/img/product/single_product.png' %}" alt="#" class="img-fluid">
+            <img src="{{product.image6.url}}" alt="#" class="img-fluid">
           </div>
           {% endif %}
         </div>

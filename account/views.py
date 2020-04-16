@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 from .forms import *
 from django.contrib import messages
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from .models import *
 from django.views.generic import *
@@ -16,7 +16,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 class SignUp(View):
     form_class=UserRegistrationForm
-    template_name='signup.html'
+    template_name='account/signup.html'
 
     def get(self, request):
         form = self.form_class()
@@ -29,6 +29,26 @@ class SignUp(View):
             messages.success(request, f'registration Success.You can login Now.')
             return redirect('login')
         return render(request, self.template_name, {"form":form})
+
+
+
+def LoginView(request):
+    if request.method=="POST":
+        form=LoginForm(request.POST)
+        if form.is_valid():
+            username=form.cleaned_data['username']
+            password=form.cleaned_data['password']
+            print(username)
+            user=authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('home')
+            else:
+                messages.error(request, 'Invalid Username or password')
+    else:
+        form=LoginForm()
+    return render(request, 'account/login.html', {'form':form})
+
 
 
 @login_required

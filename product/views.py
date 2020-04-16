@@ -33,8 +33,8 @@ def getLocation():
 
 
 class HomeView(ListView):
+	#template_name='product/home.html'
 	template_name='product/home.html'
-	#template_name='home.html'
 	context_object_name='product'
 	model=Product
 	paginate_by=3
@@ -46,7 +46,7 @@ class HomeView(ListView):
 		
 class AddProductItem(LoginRequiredMixin, CreateView):
 	form_class = AddProductForm
-	template_name = 'addproduct.html'
+	template_name = 'product/addproduct.html'
 	success_url = reverse_lazy("home")
 
 	def form_valid(self, form):
