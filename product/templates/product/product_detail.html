@@ -27,7 +27,7 @@
         <div class="product_img_slide owl-carousel">
           {% if product.image %}
           <div class="single_product_img">
-            <img src="{{product.image.url}}" alt="#" class="img-fluid">
+            <img src="{{product.image.url}}" alt="#" class="img-fluid" style="height: 600px;">
           </div>
           {% endif %}
           {% if product.image2 %}
@@ -105,16 +105,13 @@
     </p>
     <div class="card_area">
       <div class="product_count_area">
-        <form id="upvote1" method="POST" action="{% url 'upvote' product.id %}">
+        <form id="upvote1" method="POST" action="{% url 'upvote' product.id %}" onsubmit="sendForm(this.id);return false">
           {% csrf_token %}
           <input type="hidden"/>
-          {% if user in product.likes.all %}
-          <button class="fa fas fa-heart fa-4x" style="border: none; color: #828bb2; background: transparent;"></button>
-          {% else %}
-          <button class="far fa-heart fa-4x" style="border: none; color: #828bb2; background: transparent;"></button>
-          {% endif %}
+          
+          <button id='p{{product.id}}' class="{% if user in product.likes.all %} fa fas fa-heart fa-4x {% else %} far fa-heart fa-4x {% endif %} " onclick="handleclick(id)" style="border: none; color: #828bb2; background: transparent;"></button>
         </form>
-        <p>{{product.total_like}}</p>
+        <p id='likecount'>{{product.total_like}}</p>
         <i class="fa fas fa-eye fa-4x" style="color: #828bb2; margin-left:50px; "></i>
         <p>{{product.views.count}}</p>
       </div>
@@ -163,21 +160,13 @@
 <!--================End Single Product Area =================-->
 <!-- subscribe part here -->
 <!-- <section>
-  <div class="container">
-    <div class="row">
-      <div class='col-lg-8'>Similar Product</div>
-      <div class='col-lg-4'>
-        <h3>Posted From</h3>
-        
-      </div>
-    </div>
-  </div>
+  
 </section>-->
 <!-- subscribe part end -->
 
 {% endblock content %}
 
-{% block js %}
+{{% block js %}
 <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/build/ol.js"></script>
 
 <script type="text/javascript">
@@ -207,6 +196,33 @@
    })
  });
   map.addLayer(layer);
+
+
+function handleclick(id){
+    var a=$('#'+id)
+        var b=$('#likecount').text()
+        var c=parseInt(b);
+        if(a.attr('class')=='far fa-heart fa-4x'){
+          $('#likecount').html(c+1);
+          a.removeClass("far fa-heart fa-4x").addClass("fa fas fa-heart fa-4x");  
+        }
+        else{
+          $('#likecount').html(c-1);
+          a.removeClass("fa fas fa-heart fa-4x").addClass("far fa-heart fa-4x")
+        }
+  }
+
+  function sendForm(form_id){
+    var form = $('#'+form_id);
+    $.ajax({
+      type: 'POST',
+      url: $(form).attr('action'),
+      data: $(form).serialize(),
+      success: function(result) {
+
+      }
+    });
+  }
 </script>
 
 {% endblock js %}

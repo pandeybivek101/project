@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<style>
+img {
+  margin: 0 auto;
+  display: block;
+  margin-top: 10%;
+  height: 200px;
+  width: 200px;
+}
+.genric-btn.success {
+    color: #fff;
+    background: #4cd3e3;
+    border: 1px solid transparent;
+    height: 40px;
+    width: 120px;
+}
+.genric-btn.danger {
+    color: #fff;
+    background: #f44a40;
+    border: 1px solid transparent;
+    height: 40px;
+    width: 120px;
+}
+</style>
+<body>
+<img src="{{object.image.url}}" alt="Colorlib logo">
+<h1 style="text-align:center;">{{object.title}}</h1>
+<p style="text-align:center;color:red;"><strong>Are you sure to Delete?</strong>.</p>
+<br>
+<p style="text-align:center;">
+	<a href="{% url 'detailview' object.id %}"><button class="genric-btn success">Cancel</button></a>
+	<form action="{% url 'delete_product' object.id %}" method="POST" style="text-align:center;">
+	{% csrf_token %}
+	<button class="genric-btn danger">Delete</button>
+	</form>
+	 
+
+</p>
+</body>
+</html>
+

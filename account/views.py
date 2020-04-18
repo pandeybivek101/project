@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from .models import *
+from product.models import Product
 from django.views.generic import *
 from product.models import Product
 from django.views import View
@@ -58,12 +59,13 @@ def Logout(request):
 
 
 class Profile(View):
-    template_name='profile.html'
+    template_name='account/profile.html'
 
     def get(self, request):
         user_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=request.user.profile)
-        context={'user_form':user_form, 'profile_form':profile_form}
+        product=Product.objects.filter(user=request.user)
+        context={'user_form':user_form, 'profile_form':profile_form,'product':product}
         return render(request, self.template_name, context)
 
     def post(self, request):

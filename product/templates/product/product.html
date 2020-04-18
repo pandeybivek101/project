@@ -1,0 +1,29 @@
+<div class="col-xl-4 col-lg-4 col-md-6">
+	<div class="single-product mb-60">
+		{% if pro.image %}
+		<div class="product-img">
+			<a href="{% url 'detailview' pro.id %}">
+				<img src="{{pro.image.url}}" alt="" height="300">
+			</a> 
+		</div>
+		{% else %}
+		<div class="product-img">
+			<a href="{% url 'detailview' pro.id %}"><p>N/A</p></a>
+		</div>
+		{% endif %}
+		<div class="product-caption">
+			<form id="f{{pro.id}}" method="POST" action="{% url 'upvote' pro.id %}" onsubmit="sendForm(this.id);return false">
+				{% csrf_token %}
+				<input type="hidden"/>
+				<button id='{{pro.id}}' class="{% if user in pro.likes.all %} fa fas fa-heart fa-2x   {% else %} far fa-heart fa-2x  {% endif %}" style="border: none; color: #828bb2; background: transparent;" onclick="handleclick(id)"></button>
+			</form>
+			<h4><a href="#">{{pro.title}}</a></h4>
+			<div class="price">
+				<ul>
+					<li>{{pro.price}}</li>
+					<li>{{pro.distance}}</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

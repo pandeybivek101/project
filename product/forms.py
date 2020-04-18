@@ -1,8 +1,6 @@
+#from .models import *
 from .models import *
 from django import forms
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column
-
 
 class AddProductForm(forms.ModelForm):
 	title=forms.CharField(widget=forms.TextInput(

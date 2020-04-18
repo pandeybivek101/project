@@ -1,0 +1,105 @@
+{% extends 'product/base.html'%}
+{% load static %}
+{% load crispy_forms_tags %}
+{%block content%}
+
+<div class="single-slider slider-height2 d-flex align-items-center" data-background="{% static 'assets/img/hero/category.jpg' %}" style="background-image: url(&quot;assets/img/hero/category.jpg&quot;);">
+	<div class="container">
+		<div class="row">
+			<div class="col-xl-12">
+				<div class="hero-cap text-center">
+					<h2>
+						Profile
+					</h2>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Start Align Area -->
+<div class="whole-wrap">
+	<div class="container box_1170">
+		<div class="section-top-border">
+			<h3 class="mb-30 text-center">User Information</h3>
+			<hr />
+			<div class="row">
+				<div class="col-md-4">
+					<div class="single-defination">
+						<h3 class="mb-30">{{request.user.username}}</h3>
+						<img src="{{request.user.profile.image.url}}" alt="" class="img-fluid">
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="single-defination">
+						<h3 class="mb-30">Basic Information</h3>
+						<p>Username:{{request.user.username}}</p>
+						{% if requst.user.first_name %}
+						<p>First Name:{{requst.user.first_name}}</p>
+						{% else %}
+						<p>First Nane:N/A</p>
+						{% endif %}
+
+						{% if requst.user.last_name %}
+						<p>Last Name:{{requst.user.last_name}}</p>
+						{% else %}
+						<p>Last Nane:N/A</p>
+						{% endif %}
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="single-defination">
+						<h3 class="mb-30">General Description</h3>
+						<p>Nothing such special</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="section-top-border">
+			<div class="row">
+				<div class="col-lg-8 col-md-8">
+					<h3 class="mb-30">Update Your Profile</h3>
+					<form method="POST" action="{% url 'profile' %}"  enctype="multipart/form-data">
+						{% csrf_token %}
+						<div class="mt-10">
+							{{user_form.username}}
+						</div>
+						<div class="mt-10">
+							{{user_form.email}}
+						</div>
+						<div class="mt-10">
+							{{profile_form|crispy}}
+						</div>
+						<div class="mt-10">
+							<button class="genric-btn success">Submit</button>
+						</div>
+					</form>
+				</div>
+				<div class="col-lg-3 col-md-4 mt-sm-30">
+					<div class="single-element-widget mt-30">
+						<h3 class="mb-30">Selectboxes</h3>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="section-top-border">
+				<h3>My Aids</h3>
+				<div class="row gallery-item">
+					{% for pro in product %}
+					<div class="col-md-4">
+						<a href="{{pro.image.url}}" class="img-pop-up">
+							<div class="single-gallery-image" style="background: url({{pro.image.url}});">
+								<p class='hero-cap text-center'>{{pro.title}}</p>
+								
+							</div>
+						</a>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+	</div>
+</div>
+
+<!-- End Align Area -->
+{% endblock %}

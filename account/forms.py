@@ -15,6 +15,18 @@ class ProfileUpdateForm(forms.ModelForm):
 		fields = ['image']
 
 class UserUpdateForm(forms.ModelForm):
+	username=forms.CharField(widget=forms.TextInput(
+		attrs={'class':'single-input', 
+		'placeholder':"Username",
+		'name':'username'
+		}), 
+	required=True, max_length=30)
+	email=forms.EmailField(widget=forms.TextInput(
+		attrs={'class':'single-textarea', 
+		'placeholder':"Email",
+		'name':'email'
+		}), 
+	required=True, max_length=70)
 	class Meta:
 		model = User
 		fields = ['username', 'email']

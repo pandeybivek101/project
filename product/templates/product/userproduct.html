@@ -23,6 +23,7 @@
     <div class="container">
       <div class="cart_inner">
         <div class="table-responsive">
+          {% if product%}
           <table class="table">
             <thead>
               <tr>
@@ -30,6 +31,9 @@
                 <th scope="col">Price</th>
                 <th scope="col">Posted Date</th>
                 <th scope="col">Status</th>
+                {% if request.user == product.first.user %}
+                <th scope="col">Actions</th>
+                {% endif %}
               </tr>
             </thead>
             <tbody>
@@ -66,11 +70,28 @@
                   <h5>unsold</h5>
                   {% endif %}
                 </td>
+                {% if request.user == product.first.user %}
+                <td>
+                  <div class="product_count">
+                    <a href="{%url 'update_product' pro.id%}">
+                      <i class="fa fas fa-edit" style="color: green;"></i>
+                    </a>
+                    
+                  </div>
+                  <div class="product_count">
+                   <a href="{% url 'delete_product' pro.id %}">
+                     <i class="fa fa-trash" aria-hidden="true" style="color: red;">
+                   </a></i>
+                  </div>
+                </td>
+                {% endif %}
               </tr>
               {% endfor %}
             </tbody>
           </table>
-          
+          {% else %}
+          <h1>No Aids Found</h1>
+          {% endif %}
         </div>
       </div>
   </div></section>

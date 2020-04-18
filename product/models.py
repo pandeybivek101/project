@@ -32,8 +32,8 @@ class Product(models.Model):
 	sold=models.BooleanField(default=False)
 	pro_lat=models.FloatField(max_length=300, blank=True, null=True)
 	pro_lng=models.FloatField(max_length=300, blank=True, null=True)
-	show_contact=models.BooleanField(default=True)
-	show_location=models.BooleanField(default=True)
+	show_contact=models.BooleanField()
+	show_location=models.BooleanField()
 
 
 	def __str__(self):
@@ -69,7 +69,6 @@ class Replies(models.Model):
 
 	def __str__(self):
 		return "{} {}".format(self.comment.id, self.replied_user)
-
 
 class Message(models.Model):
 	message = models.TextField()
