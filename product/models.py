@@ -10,6 +10,13 @@ class Catagory(models.Model):
 	def __str__(self):
 		return self.catagory
 
+class SubCatagory(models.Model):
+	sub_catagory=models.CharField(max_length=100)
+	catagory=models.ForeignKey(Catagory, on_delete=models.CASCADE)
+
+	def __str__(self):
+		return self.sub_catagory
+
 class Product(models.Model):
 	title=models.CharField(max_length=300)
 	pub_date=models.DateTimeField(auto_now_add = True)
@@ -25,7 +32,8 @@ class Product(models.Model):
 	body=models.TextField()
 	url=models.URLField(blank=True, null=True)
 	catagory = models.ForeignKey(Catagory, on_delete=models.CASCADE)
-	price = models.CharField(max_length=10)
+	sub_catagory = models.ForeignKey(SubCatagory, on_delete=models.CASCADE, blank=True, null=True)
+	price = models.IntegerField()
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	likes=models.ManyToManyField(User,related_name="likes",blank=True)
 	views=models.ManyToManyField(User,related_name="views",blank=True)

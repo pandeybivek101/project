@@ -17,6 +17,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from .mixins import *
 import geocoder
 from math import sin, cos, sqrt, atan2, radians
+from .filters import *
 
 # Create your views here.
 
@@ -178,23 +179,39 @@ class UserProductlistView(ListView):
 	model = Product
 	template_name = 'product/userproduct.html'
 	context_object_name = 'product'
-	paginate_by = 3
 
 	def get_queryset(self):
 		user = get_object_or_404(User, username=self.kwargs.get('username'))
 		return Product.objects.filter(user=user).order_by('-pub_date')
 
 
-class productcatagorylist(UserProductlistView, ListView):
+class productcatagorylist(ListView):
 	model = Product
-	template_name = 'catagorylist.html'
+	template_name = 'product/catagorylist.html'
 	context_object_name = 'product'
-	paginate_by = 3
+
+	def get_object(self):
+		return get_object_or_404(Catagory, catagory=self.kwargs.get('catagory'))
 
 	def get_queryset(self):
-		catagory = get_object_or_404(Catagory, catagory=self.kwargs.get('catagory'))
-		return Product.objects.filter(catagory = catagory).order_by('-pub_date')
+		return Product.objects.filter(catagory = self.get_object()).order_by('-pub_date')
 
+	def get_context_data(self, *args, **kwargs):
+		context=super(productcatagorylist, self).get_context_data(*args, **kwargs)
+		product=self.get_queryset()
+		subcatagory=SubCatagory.objects.filter(catagory=self.get_object())
+		product_filter = ProductFilter(self.request.GET, queryset=product)
+		product=product_filter.qs
+		price_filter=PriceFilter(self.request.GET, queryset=product)
+		product=price_filter.qs
+		context.update({
+			'catagory':self.get_object(),
+			'product_filter':product_filter,
+			'price_filter':price_filter,
+			'product':product,
+			'subcatagory':subcatagory,
+		})
+		return context
 
 
 class DeleteComment(LoginRequiredMixin, UserPassesTestMixin, DeleteCommentURLMixin, SuccessMessageMixin, DeleteView):
@@ -304,9 +321,19 @@ class AddReply(LoginRequiredMixin, AddMixin, View, ):
 		return render(request, self.template_name, context)
 
 
+
 def ChatView(request, username):
 	return redirect('/dialogs/{}'.format(username))
 
 
+class productsubcatagorylist(productcatagorylist):
 
+	def get_subcatagory_obj(self):
+		return get_object_or_404(SubCatagory, sub_catagory=self.kwargs.get('sub_catagory'))
 
+	def get_object(self):
+		return get_object_or_404(Catagory, catagory=self.kwargs.get('catagory'))
+
+	def get_queryset(self):
+		return Product.objects.filter(catagory=self.get_object(),
+			sub_catagory=self.get_subcatagory_obj()).order_by('-pub_date')

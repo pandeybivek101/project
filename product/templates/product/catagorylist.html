@@ -1,0 +1,123 @@
+{% extends 'product/base.html'%}
+{% load crispy_forms_tags %}
+{% load static %}
+{%block content%}
+<!-- slider Area Start-->
+<div class="slider-area ">
+	<!-- Mobile Menu -->
+	<div class="single-slider slider-height2 d-flex align-items-center" data-background="{% static 'assets/img/hero/category.jpg' %}">
+		<div class="container">
+			<div class="row">
+				<div class="col-xl-12">
+					<div class="hero-cap text-center">
+						<h3>{{catagory.catagory}}</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- slider Area End-->
+<section class="category-area section-padding30">
+	<div class="container-fluid">
+		<!-- Section Tittle -->
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="section-tittle text-center  mb-85">
+					<h3>Filters</h3>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xl-4 col-lg-6">
+				<div class="single-category mb-30">
+					<div class="category-img">
+						<div class="blog_right_sidebar">
+							<aside class="single_sidebar_widget post_category_widget">
+								<h4 class="widget_title">Sub-Category</h4>
+								<ul class="list cat-list">
+									{% for item in subcatagory%}
+									<li>
+										<a href="{% url 'product-subcatagory' item.catagory item.sub_catagory%}" class="d-flex">
+											<p>{{item.sub_catagory}}</p>
+											<p>(37)</p>
+										</a>
+									</li>
+									{% endfor %}
+								</ul>
+							</aside>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-4 col-lg-6">
+				<div class="single-category mb-30">
+					<div class="category-img text-center">
+						<form method="get">
+							{{product_filter.form|crispy}}
+							<button class="genric-btn success">Submit</button>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-4 col-lg-6">
+				<div class="single-category mb-30">
+					<div class="category-img text-center" style="display: inline-block;">
+						<form method="get">
+							{{price_filter.form|crispy}}<br/>
+							<button class="genric-btn success mt-3">Submit</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- Category Area End-->
+<!-- Latest Products Start -->
+<section class="latest-product-area padding-bottom">
+	<div class="container">
+		<div class="row product-btn d-flex justify-content-end align-items-end">
+			<!-- Section Tittle -->
+			<div class="col-xl-4 col-lg-5 col-md-5">
+				<div class="section-tittle mb-30">
+					<h2>Products</h2>
+				</div>
+			</div>
+			<div class="col-xl-8 col-lg-7 col-md-7">
+				<div class="properties__button f-right">
+					<!--Nav Button  -->
+					<nav>                                                                                                
+						<div class="nav nav-tabs" id="nav-tab" role="tablist">
+							<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">{{catagory.catagory}}</a>
+						</div>
+					</nav>
+					<!--End Nav Button  -->
+				</div>
+			</div>
+		</div>
+		<!-- Nav Card -->
+		<div class="tab-content" id="nav-tabContent">
+			<!-- card one -->
+			<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+				{% if product %}
+				<div class="row">
+					{% for pro in product %}
+					{% include 'product/product.html' %}
+					{% endfor %}
+				</div>
+				{% else %}
+				<h3 class="text-center">No Product Available</h3>
+				{% endif %}
+			</div>
+			<!-- Card two -->
+		</div>
+		<!-- Card three -->
+		<!-- card foure -->
+	</div>
+	<!-- End Nav Card -->
+</div>
+</section>
+
+{% endblock %}

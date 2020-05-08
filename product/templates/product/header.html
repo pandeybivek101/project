@@ -28,12 +28,15 @@
                                     </ul>
                                 </div>
                                 <div class="header-info-right">
-                                   <ul>                                          
+                                   <ul>  
+                                     {% if user.is_authenticated %}                                        
                                        <li><a href="{% url 'profile' %}">My Profile </a></li>
+                                       
                                        <li><a href="{% url 'userproduct' request.user.username %}">My Aids</a></li>
                                        <li><a href="{% url 'addproduct' %}">Sell Product</a></li>
                                        <li><a href="cart.html">Chat</a></li>
                                        <li><a href="checkout.html">{{request.user.username}}</a></li>
+                                       {% endif %}
                                    </ul>
                                 </div>
                             </div>
@@ -58,17 +61,9 @@
                                             <li><a href="index.html">About</a></li>
                                             <li><a href="#">Catagory</a>
                                                 <ul class="submenu">
-                                                    <li><a href="cart.html">Card</a>
-                                                        <ul class="submenu">
-                                                           <li><a href="elements.html">Element</a></li> 
-                                                        </ul>
-
-                                                    </li>
-                                                    <li><a href="elements.html">Element</a></li>
-                                                    <li><a href="about.html">About</a></li>
-                                                    <li><a href="confirmation.html">Confirmation</a></li>
-                                                    <li><a href="cart.html">Shopping Cart</a></li>
-                                                    <li><a href="checkout.html">Product Checkout</a></li>
+                                                    {% for item in name%}
+                                                    <li><a href="{%url 'product-catagory' item.catagory %}">{{item.catagory}}</a></li>
+                                                    {% endfor %}
                                                 </ul>
                                             </li>
                                             <li><a href="contact.html">Contact</a></li>

@@ -37,6 +37,7 @@
                 <form class="row contact_form" action="{%url 'signup' %}" method="post" novalidate="novalidate">
                     {% csrf_token %}
                     {{form|crispy}}
+                    {{phone_form|crispy}}
                     <div class="col-md-12 form-group">
                         <button type="submit" value="submit" class="btn_3">
                             signup

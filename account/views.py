@@ -21,15 +21,20 @@ class SignUp(View):
 
     def get(self, request):
         form = self.form_class()
-        return render(request, self.template_name, {"form":form})
+        phone_form = PhonenumberForm()
+        return render(request, self.template_name, {"form":form, 'phone_form':phone_form})
 
     def post(self, request):
         form = self.form_class(request.POST)
-        if form.is_valid():
+        phone_form=PhonenumberForm(request.POST)
+        if form.is_valid() and phone_form.is_valid():
             form.save()
-            messages.success(request, f'registration Success.You can login Now.')
+            user=User.objects.filter().last()
+            phone=Profile.objects.get(user=user)
+            phone.contact=phone_form.cleaned_data['contact']
+            phone.save()
             return redirect('login')
-        return render(request, self.template_name, {"form":form})
+        return render(request, self.template_name, {"form":form, 'phone_form':phone_form})
 
 
 
